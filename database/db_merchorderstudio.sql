@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 22 Bulan Mei 2026 pada 05.52
--- Versi server: 10.4.32-MariaDB
--- Versi PHP: 8.2.12
+-- Generation Time: May 30, 2026 at 11:15 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `detail_pesanan`
+-- Table structure for table `detail_pesanan`
 --
 
 CREATE TABLE `detail_pesanan` (
@@ -39,7 +39,7 @@ CREATE TABLE `detail_pesanan` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `pembayaran`
+-- Table structure for table `pembayaran`
 --
 
 CREATE TABLE `pembayaran` (
@@ -54,7 +54,7 @@ CREATE TABLE `pembayaran` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `pesanan`
+-- Table structure for table `pesanan`
 --
 
 CREATE TABLE `pesanan` (
@@ -68,7 +68,7 @@ CREATE TABLE `pesanan` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `produk`
+-- Table structure for table `produk`
 --
 
 CREATE TABLE `produk` (
@@ -85,7 +85,7 @@ CREATE TABLE `produk` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `users`
+-- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
@@ -94,16 +94,22 @@ CREATE TABLE `users` (
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `no_telp` varchar(20) DEFAULT NULL,
-  `alamat` text DEFAULT NULL,
-  `role` enum('customer','admin') NOT NULL DEFAULT 'customer'
+  `alamat` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id_user`, `nama`, `email`, `password`, `no_telp`, `alamat`) VALUES
+(3, 'Alejandro', 'unpamvictor', '1234', '0812399999', 'ale@unpam.com');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indeks untuk tabel `detail_pesanan`
+-- Indexes for table `detail_pesanan`
 --
 ALTER TABLE `detail_pesanan`
   ADD PRIMARY KEY (`id_detail`),
@@ -111,85 +117,85 @@ ALTER TABLE `detail_pesanan`
   ADD KEY `id_produk` (`id_produk`);
 
 --
--- Indeks untuk tabel `pembayaran`
+-- Indexes for table `pembayaran`
 --
 ALTER TABLE `pembayaran`
   ADD PRIMARY KEY (`id_pembayaran`),
   ADD UNIQUE KEY `id_pesanan` (`id_pesanan`);
 
 --
--- Indeks untuk tabel `pesanan`
+-- Indexes for table `pesanan`
 --
 ALTER TABLE `pesanan`
   ADD PRIMARY KEY (`id_pesanan`),
   ADD KEY `id_user` (`id_user`);
 
 --
--- Indeks untuk tabel `produk`
+-- Indexes for table `produk`
 --
 ALTER TABLE `produk`
   ADD PRIMARY KEY (`id_produk`);
 
 --
--- Indeks untuk tabel `users`
+-- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id_user`),
   ADD UNIQUE KEY `email` (`email`);
 
 --
--- AUTO_INCREMENT untuk tabel yang dibuang
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT untuk tabel `detail_pesanan`
+-- AUTO_INCREMENT for table `detail_pesanan`
 --
 ALTER TABLE `detail_pesanan`
   MODIFY `id_detail` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `pembayaran`
+-- AUTO_INCREMENT for table `pembayaran`
 --
 ALTER TABLE `pembayaran`
   MODIFY `id_pembayaran` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `pesanan`
+-- AUTO_INCREMENT for table `pesanan`
 --
 ALTER TABLE `pesanan`
   MODIFY `id_pesanan` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `produk`
+-- AUTO_INCREMENT for table `produk`
 --
 ALTER TABLE `produk`
   MODIFY `id_produk` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `users`
+-- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+-- Constraints for dumped tables
 --
 
 --
--- Ketidakleluasaan untuk tabel `detail_pesanan`
+-- Constraints for table `detail_pesanan`
 --
 ALTER TABLE `detail_pesanan`
   ADD CONSTRAINT `detail_pesanan_ibfk_1` FOREIGN KEY (`id_pesanan`) REFERENCES `pesanan` (`id_pesanan`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `detail_pesanan_ibfk_2` FOREIGN KEY (`id_produk`) REFERENCES `produk` (`id_produk`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `pembayaran`
+-- Constraints for table `pembayaran`
 --
 ALTER TABLE `pembayaran`
   ADD CONSTRAINT `pembayaran_ibfk_1` FOREIGN KEY (`id_pesanan`) REFERENCES `pesanan` (`id_pesanan`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `pesanan`
+-- Constraints for table `pesanan`
 --
 ALTER TABLE `pesanan`
   ADD CONSTRAINT `pesanan_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`) ON DELETE SET NULL ON UPDATE CASCADE;
