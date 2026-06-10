@@ -12,19 +12,19 @@ import java.sql.DriverManager;
  * @author alewi
  */
 public class koneksi {
-    private static Connection koneksi;
+    private static Connection conn;
     
     public static Connection getConnection() {
         try {
-            String url = "jdbc:mysql://localhost:3306/db_merchorderstudio";
-            String user = "root";
-            String pass = "";
-            
-            Connection conn = DriverManager.getConnection(url, user, pass);
-            return conn;
+            if (conn == null || conn.isClosed()){
+                conn = DriverManager.getConnection(
+                        "jdbc:mysql://localhost:3306/db_merchorderstudio",
+                        "root",
+                        "");
+            }
         } catch (Exception e) {
-            System.out.println("Koneksi Gagal : " + e.getMessage());
-            return null;
+            e.printStackTrace();
         }
+        return conn;
     }
 }
