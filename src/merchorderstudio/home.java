@@ -17,6 +17,7 @@ public class home extends javax.swing.JFrame {
      */
     public home() {
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**

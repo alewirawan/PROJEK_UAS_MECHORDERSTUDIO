@@ -4,6 +4,12 @@
  */
 package merchorderstudio;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import config.koneksi;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Ratih Nawang Wulan
@@ -17,6 +23,7 @@ public class loginForm extends javax.swing.JFrame {
      */
     public loginForm() {
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -184,6 +191,35 @@ public class loginForm extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        String email = jTextField1.getText().trim();
+        String pw = new String(jPasswordField1.getPassword());
+        
+        if (email.isEmpty() || pw.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Field Tidak Boleh Kosong");
+            return;
+        }
+        
+        String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
+        
+        Connection conn = koneksi.getConnection();
+        
+        try (PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setString(1, email);
+            ps.setString(2, pw);
+            
+            ResultSet rs = ps.executeQuery();
+            
+            if(rs.next()){
+                JOptionPane.showMessageDialog(this, "Login Berhasil");
+                
+                new home().setVisible(true);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Email atau Password Salah!");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -192,6 +228,8 @@ public class loginForm extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        new register().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
