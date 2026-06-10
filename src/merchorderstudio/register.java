@@ -4,23 +4,11 @@
  */
 package merchorderstudio;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import config.koneksi;
-import java.awt.Image;
-import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
-import javax.swing.text.AbstractDocument;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DocumentFilter;
-
 /**
  *
  * @author Ratih Nawang Wulan
  */
 public class register extends javax.swing.JFrame {
-    Connection conn;
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(register.class.getName());
 
@@ -29,35 +17,6 @@ public class register extends javax.swing.JFrame {
      */
     public register() {
         initComponents();
-        pack();
-        setResizable(false);
-        setLocationRelativeTo(null);
-        
-        ImageIcon j11 = new ImageIcon(getClass().getResource("/assets/banner_login.png"));
-        int width = 150;
-        int height = 220;
-        Image og = j11.getImage();
-        Image rsz = og.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        ImageIcon j11r = new ImageIcon(rsz);
-        jLabel11.setIcon(j11r);
-        
-        AbstractDocument doc = (AbstractDocument) jTextField3.getDocument();
-        doc.setDocumentFilter(new DocumentFilter() {
-            @Override
-            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr)
-                    throws BadLocationException{
-                if(string.matches("\\d+")){
-                    super.insertString(fb, offset, string, attr);
-                }
-            }
-            @Override
-            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
-                    throws BadLocationException{
-                if(text.matches("\\d+")){
-                    super.replace(fb, offset, length, text, attrs);
-                }
-            }
-        });
     }
 
     /**
@@ -224,41 +183,6 @@ public class register extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        try {
-            Connection conn = koneksi.getConnection();
-            
-            String sql = "INSERT INTO users " +
-                    "(nama, email, password, no_telp, alamat)" +
-                    "VALUES (?, ?, ?, ?, ?)";
-            
-            PreparedStatement pst = conn.prepareStatement(sql);
-            
-            pst.setString(1, jTextField1.getText());
-            pst.setString(2, jTextField2.getText());
-            
-            char[]pw = jPasswordField1.getPassword();
-            String pwString = new String(pw);
-            pst.setString(3, pwString);
-            pst.setString(4, jTextField3.getText());
-            pst.setString(5, jTextField4.getText());
-            
-            pst.executeUpdate();
-            
-            JOptionPane.showMessageDialog(null, "Akun Anda Berhasil Dibuat");
-            
-            jTextField1.setText("");
-            jTextField2.setText("");
-            jPasswordField1.setText("");
-            jTextField3.setText("");
-            jTextField4.setText("");
-            
-            loginForm frameloginForm = new loginForm();
-            frameloginForm.setVisible(true);
-            this.dispose();
-        } catch (Exception e){
-            JOptionPane.showMessageDialog(null, "Akun Gagal Dibuat : " + e.getMessage());
-        }
-        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed

@@ -17,8 +17,6 @@ public class home extends javax.swing.JFrame {
      */
     public home() {
         initComponents();
-        setResizable(false);
-        setLocationRelativeTo(null);
     }
 
     /**

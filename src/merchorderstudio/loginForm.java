@@ -4,9 +4,6 @@
  */
 package merchorderstudio;
 
-import java.awt.Image;
-import javax.swing.ImageIcon;
-
 /**
  *
  * @author Ratih Nawang Wulan
@@ -20,18 +17,6 @@ public class loginForm extends javax.swing.JFrame {
      */
     public loginForm() {
         initComponents();
-        pack();
-        setResizable(false);
-        setLocationRelativeTo(null);
-        
-        ImageIcon j11 = new ImageIcon(getClass().getResource("/assets/banner_login.png"));
-        int width = 150;
-        int height = 220;
-        Image og = j11.getImage();
-        Image rsz = og.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        ImageIcon j11r = new ImageIcon(rsz);
-        jLabel11.setIcon(j11r);
-        
     }
 
     /**
@@ -199,9 +184,6 @@ public class loginForm extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        home framehome = new home();
-        framehome.setVisible(true);
-        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -210,9 +192,6 @@ public class loginForm extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        register frameregister = new register();
-        frameregister.setVisible(true);
-        this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
