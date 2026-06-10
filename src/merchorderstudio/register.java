@@ -4,6 +4,11 @@
  */
 package merchorderstudio;
 
+import java.sql.PreparedStatement;
+import java.sql.Connection;
+import config.koneksi;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Ratih Nawang Wulan
@@ -17,6 +22,7 @@ public class register extends javax.swing.JFrame {
      */
     public register() {
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -183,6 +189,56 @@ public class register extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        String nama = jTextField1.getText().trim();
+        String alamat = jTextField2.getText().trim();
+        String noTelp = jTextField3.getText();
+        String email = jTextField4.getText().trim();
+        String pw = new String(jPasswordField1.getPassword());
+        
+        if (nama.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Nama Belum Diisi");
+            return;
+        } else if (alamat.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Alamat Masih Kosong");
+            return;
+        } else if (noTelp.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Masukkan No Telepon");
+            return;
+        } else if (email.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Email Belum Diisi");
+            return;
+        } else if (pw.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Password masih Kosong");
+            return;
+        }
+        
+        String sql = "INSERT INTO users"
+                + "(nama, email, password, no_telp, alamat)"
+                + "VALUES (?, ?, ?, ?, ?)";
+        
+        Connection conn = koneksi.getConnection();
+        
+        try (PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setString(1, nama);
+            ps.setString(2, email);
+            ps.setString(3, pw);
+            ps.setString(4, noTelp);
+            ps.setString(5, alamat);
+            
+            ps.executeUpdate();
+            JOptionPane.showMessageDialog(this, "Akun Berhasil Dibuat");
+            
+            jTextField1.setText("");
+            jTextField2.setText("");
+            jTextField3.setText("");
+            jTextField4.setText("");
+            jPasswordField1.setText("");
+            
+            new loginForm().setVisible(true);
+            this.dispose();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Akun Gagal Dibuat: " + e.getMessage());
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
