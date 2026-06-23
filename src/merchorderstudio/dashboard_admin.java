@@ -32,7 +32,7 @@ public class dashboard_admin extends javax.swing.JFrame {
         
         jTable2.setModel(new DefaultTableModel(
     new Object[][]{},
-    new String[]{"id", "ImageIcon", "Nama", "Kategori", "Harga", "Stok"}
+    new String[]{"id", "Gambar", "Nama_Produk", "Kategori", "Harga", "Stok"}
 ));
     jTable2.getColumnModel().getColumn(0).setMinWidth(0);
     jTable2.getColumnModel().getColumn(0).setMaxWidth(0);
