@@ -16,6 +16,8 @@ import config.koneksi;
 public class kelolaproduk_admin extends javax.swing.JFrame {
     
     private String pathGambar = "";
+    String mode = "ADD";
+    int idProduk;
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(kelolaproduk_admin.class.getName());
 
@@ -24,6 +26,7 @@ public class kelolaproduk_admin extends javax.swing.JFrame {
      */
     public kelolaproduk_admin() {
         initComponents();
+        mode = "ADD";
 }
     
     private void clearForm() {
@@ -32,7 +35,18 @@ public class kelolaproduk_admin extends javax.swing.JFrame {
         jTextField3.setText("");
         jTextField4.setText("");
         pathGambar = "";
-    }  
+    }
+    
+    public void setDataEdit(int id,String nama, String kategori, String harga, String stok) {
+        
+    this.mode = "EDIT";
+    this.idProduk = id;
+        
+    jTextField1.setText(nama);
+    jTextField4.setText(kategori);
+    jTextField2.setText(harga);
+    jTextField3.setText(stok);
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -65,7 +79,7 @@ public class kelolaproduk_admin extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Kelola Produk");
+        jLabel1.setText("Tambah Produk");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -197,56 +211,90 @@ public class kelolaproduk_admin extends javax.swing.JFrame {
         
         Connection conn = koneksi.getConnection();
         
-         try {
+            try {
 
-        // VALIDASI
-        if (jTextField1.getText().isEmpty() ||
-            jTextField2.getText().isEmpty() ||
-            jTextField3.getText().isEmpty()) {
+            // VALIDASI
+            if (jTextField1.getText().isEmpty() ||
+                jTextField2.getText().isEmpty() ||
+                jTextField3.getText().isEmpty()) {
 
-            JOptionPane.showMessageDialog(this, "Data belum lengkap!");
-            return;
-        }
+                JOptionPane.showMessageDialog(this, "Data belum lengkap!");
+                return;
+            }
 
-        if (pathGambar.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Pilih gambar dulu!");
-            return;
-        }
+            if (pathGambar.isEmpty() && mode.equals("ADD")) {
+                JOptionPane.showMessageDialog(this, "Pilih gambar dulu!");
+                return;
+            }
 
-        double harga;
-        int stok;
+            double harga;
+            int stok;
 
-        try {
-            harga = Double.parseDouble(jTextField2.getText());
-            stok = Integer.parseInt(jTextField3.getText());
+            try {
+                harga = Double.parseDouble(jTextField2.getText());
+                stok = Integer.parseInt(jTextField3.getText());
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Harga/Stok harus angka!");
+                return;
+            }
+
+            if (mode.equals("ADD")) {
+
+                String sql = "INSERT INTO produk "
+                        + "(nama_produk, kategori, harga, stok, ukuran, deskripsi, foto_produk) "
+                        + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+                PreparedStatement pst = conn.prepareStatement(sql);
+
+                pst.setString(1, jTextField1.getText());
+                pst.setString(2, jComboBox1.getSelectedItem().toString());
+                pst.setDouble(3, harga);
+                pst.setInt(4, stok);
+                pst.setString(5, ""); // ukuran
+                pst.setString(6, ""); // deskripsi
+                pst.setString(7, pathGambar);
+
+                pst.executeUpdate();
+
+                JOptionPane.showMessageDialog(this, "Produk berhasil disimpan!");
+
+            }
+
+            // =========================
+            // ✏️ MODE EDIT (UPDATE)
+            // =========================
+            else {
+
+                String sql = "UPDATE produk SET "
+                        + "nama_produk=?, kategori=?, harga=?, stok=?, ukuran=?, deskripsi=? "
+                        + "WHERE id_produk=?";
+
+                PreparedStatement pst = conn.prepareStatement(sql);
+
+                pst.setString(1, jTextField1.getText());
+                pst.setString(2, jComboBox1.getSelectedItem().toString());
+                pst.setDouble(3, harga);
+                pst.setInt(4, stok);
+                pst.setString(5, ""); // ukuran
+                pst.setString(6, ""); // deskripsi
+                pst.setInt(7, idProduk); // ID dari dashboard
+
+                pst.executeUpdate();
+
+                JOptionPane.showMessageDialog(this, "Produk berhasil diupdate!");
+            }
+
+            // kembali ke dashboard
+            dashboard_admin admin = new dashboard_admin();
+            admin.setVisible(true);
+
+            this.dispose();
+
+            clearForm();
+
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Harga/Stok harus angka!");
-            return;
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
         }
-
-        String sql = "INSERT INTO produk "
-                + "(nama_produk, kategori, harga, stok, ukuran, deskripsi, foto_produk) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-
-        PreparedStatement pst = conn.prepareStatement(sql);
-
-        pst.setString(1, jTextField1.getText());
-        pst.setString(2, jComboBox1.getSelectedItem().toString());
-        pst.setDouble(3, harga);
-        pst.setInt(4, stok);
-        pst.setString(5, ""); // kalau belum ada ukuran
-        pst.setString(6, ""); // kalau belum ada deskripsi
-        pst.setString(7, pathGambar);
-
-        pst.executeUpdate();
-
-        JOptionPane.showMessageDialog(this, "Produk berhasil disimpan!");
-
-        clearForm();
-
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
-    }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
