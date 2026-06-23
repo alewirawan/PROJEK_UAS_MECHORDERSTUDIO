@@ -84,7 +84,7 @@ public class dashboard_admin extends javax.swing.JFrame {
     private void loadProduk() {
 
     try {
-
+        
         Connection conn = koneksi.getConnection();
 
         String sql = "SELECT * FROM produk";
@@ -95,26 +95,21 @@ public class dashboard_admin extends javax.swing.JFrame {
         model.setRowCount(0);
 
         while (rs.next()) {
-            
+
             String nama = rs.getString("nama_produk");
             String kategori = rs.getString("kategori");
             double harga = rs.getDouble("harga");
             int stok = rs.getInt("stok");
 
-            byte[] imgBytes = rs.getBytes("foto_produk");
+            byte[] imageData = rs.getBytes("foto_produk");
+            ImageIcon imageIcon = null;
 
-            ImageIcon icon = null;
-
-            if (imgBytes != null) {
-                Image img = new ImageIcon(imgBytes)
-                        .getImage()
-                        .getScaledInstance(70, 70, Image.SCALE_SMOOTH);
-
-                icon = new ImageIcon(img);
+            if (imageData != null) {
+                imageIcon = new ImageIcon(imageData);
             }
 
             model.addRow(new Object[]{
-                icon,
+                imageIcon,
                 nama,
                 kategori,
                 harga,
@@ -122,8 +117,12 @@ public class dashboard_admin extends javax.swing.JFrame {
             });
         }
 
+        rs.close();
+        pst.close();
+        conn.close();
+
     } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, e);
+        e.printStackTrace();
     }
 }
 
@@ -475,6 +474,7 @@ public class dashboard_admin extends javax.swing.JFrame {
                 "Gambar", "Nama_Produk", "Kategori", "Harga", "Stok"
             }
         ));
+        jTable2.setRowHeight(70);
         jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTable2MouseClicked(evt);
