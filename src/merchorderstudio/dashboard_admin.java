@@ -30,6 +30,16 @@ public class dashboard_admin extends javax.swing.JFrame {
     public dashboard_admin() {
         initComponents();
         
+        jTable2.setModel(new DefaultTableModel(
+    new Object[][]{},
+    new String[]{"id", "ImageIcon", "Nama", "Kategori", "Harga", "Stok"}
+));
+    jTable2.getColumnModel().getColumn(0).setMinWidth(0);
+    jTable2.getColumnModel().getColumn(0).setMaxWidth(0);
+    jTable2.getColumnModel().getColumn(0).setWidth(0);
+    jTable2.getColumnModel().getColumn(0).setPreferredWidth(0);
+
+        
         jTable2.setRowHeight(70);
         
         card = new CardLayout();
@@ -95,7 +105,8 @@ public class dashboard_admin extends javax.swing.JFrame {
         model.setRowCount(0);
 
         while (rs.next()) {
-
+            
+            int id = rs.getInt("id_produk");
             String nama = rs.getString("nama_produk");
             String kategori = rs.getString("kategori");
             double harga = rs.getDouble("harga");
@@ -109,6 +120,7 @@ public class dashboard_admin extends javax.swing.JFrame {
             }
 
             model.addRow(new Object[]{
+                id,
                 imageIcon,
                 nama,
                 kategori,
@@ -293,10 +305,12 @@ public class dashboard_admin extends javax.swing.JFrame {
 
         jPanel2.setLayout(new java.awt.CardLayout());
 
+        jPanel10.setBackground(new java.awt.Color(255, 255, 255));
+
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel3.setText("Dashboard Admin");
 
-        jPanel14.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel14.setBackground(new java.awt.Color(204, 204, 204));
 
         javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
         jPanel14.setLayout(jPanel14Layout);
@@ -309,7 +323,7 @@ public class dashboard_admin extends javax.swing.JFrame {
             .addGap(0, 100, Short.MAX_VALUE)
         );
 
-        jPanel15.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel15.setBackground(new java.awt.Color(204, 204, 204));
 
         javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
         jPanel15.setLayout(jPanel15Layout);
@@ -322,7 +336,7 @@ public class dashboard_admin extends javax.swing.JFrame {
             .addGap(0, 100, Short.MAX_VALUE)
         );
 
-        jPanel16.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel16.setBackground(new java.awt.Color(204, 204, 204));
 
         javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
         jPanel16.setLayout(jPanel16Layout);
@@ -335,7 +349,7 @@ public class dashboard_admin extends javax.swing.JFrame {
             .addGap(0, 100, Short.MAX_VALUE)
         );
 
-        jPanel17.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel17.setBackground(new java.awt.Color(204, 204, 204));
 
         javax.swing.GroupLayout jPanel17Layout = new javax.swing.GroupLayout(jPanel17);
         jPanel17.setLayout(jPanel17Layout);
@@ -444,14 +458,16 @@ public class dashboard_admin extends javax.swing.JFrame {
         jPanel9.setLayout(jPanel9Layout);
         jPanel9Layout.setHorizontalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 599, Short.MAX_VALUE)
+            .addGap(0, 635, Short.MAX_VALUE)
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 482, Short.MAX_VALUE)
+            .addGap(0, 487, Short.MAX_VALUE)
         );
 
         jPanel2.add(jPanel9, "card8");
+
+        jPanel8.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel8.setText("Kelola Produk");
@@ -491,9 +507,10 @@ public class dashboard_admin extends javax.swing.JFrame {
         jLabel9.setText("Aksi");
 
         jButton11.setText("Edit");
+        jButton11.addActionListener(this::jButton11ActionPerformed);
 
         jButton12.setBackground(new java.awt.Color(255, 51, 51));
-        jButton12.setText("jButton11");
+        jButton12.setText("DELETE");
         jButton12.addActionListener(this::jButton12ActionPerformed);
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
@@ -504,39 +521,36 @@ public class dashboard_admin extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel8Layout.createSequentialGroup()
-                                .addGap(27, 27, 27)
-                                .addComponent(jLabel9))
-                            .addGroup(jPanel8Layout.createSequentialGroup()
-                                .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(7, 7, 7))
-                    .addGroup(jPanel8Layout.createSequentialGroup()
                         .addComponent(jLabel8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
+                        .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 623, Short.MAX_VALUE)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel9)
+                            .addGroup(jPanel8Layout.createSequentialGroup()
+                                .addComponent(jButton11)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButton12)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addGap(17, 17, 17)
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE))
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton10, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         jPanel2.add(jPanel8, "card7");
@@ -545,11 +559,11 @@ public class dashboard_admin extends javax.swing.JFrame {
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 599, Short.MAX_VALUE)
+            .addGap(0, 635, Short.MAX_VALUE)
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 482, Short.MAX_VALUE)
+            .addGap(0, 487, Short.MAX_VALUE)
         );
 
         jPanel2.add(jPanel7, "card6");
@@ -558,11 +572,11 @@ public class dashboard_admin extends javax.swing.JFrame {
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 599, Short.MAX_VALUE)
+            .addGap(0, 635, Short.MAX_VALUE)
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 482, Short.MAX_VALUE)
+            .addGap(0, 487, Short.MAX_VALUE)
         );
 
         jPanel2.add(jPanel6, "card5");
@@ -571,11 +585,11 @@ public class dashboard_admin extends javax.swing.JFrame {
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 599, Short.MAX_VALUE)
+            .addGap(0, 635, Short.MAX_VALUE)
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 482, Short.MAX_VALUE)
+            .addGap(0, 487, Short.MAX_VALUE)
         );
 
         jPanel2.add(jPanel5, "card4");
@@ -584,11 +598,11 @@ public class dashboard_admin extends javax.swing.JFrame {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 599, Short.MAX_VALUE)
+            .addGap(0, 635, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 482, Short.MAX_VALUE)
+            .addGap(0, 487, Short.MAX_VALUE)
         );
 
         jPanel2.add(jPanel4, "card3");
@@ -597,11 +611,11 @@ public class dashboard_admin extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 599, Short.MAX_VALUE)
+            .addGap(0, 635, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 482, Short.MAX_VALUE)
+            .addGap(0, 487, Short.MAX_VALUE)
         );
 
         jPanel2.add(jPanel3, "card2");
@@ -682,6 +696,42 @@ public class dashboard_admin extends javax.swing.JFrame {
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
         // TODO add your handling code here:
+        int row = jTable2.getSelectedRow();
+
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Pilih data dulu!");
+            return;
+        }
+
+        // ambil ID dari kolom pertama (WAJIB ada id_produk di table model)
+        int id = Integer.parseInt(jTable2.getValueAt(row, 0).toString());
+
+        int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "Yakin ingin hapus data ini?",
+                "Konfirmasi",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirm == JOptionPane.YES_OPTION) {
+
+            try {
+                Connection conn = koneksi.getConnection();
+
+                String sql = "DELETE FROM produk WHERE id_produk=?";
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ps.setInt(1, id);
+
+                ps.executeUpdate();
+
+                JOptionPane.showMessageDialog(this, "Data berhasil dihapus!");
+
+                loadProduk(); 
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Gagal hapus: " + e.getMessage());
+            }
+        }
     }//GEN-LAST:event_jButton12ActionPerformed
 
     private void jTable2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable2KeyReleased
@@ -691,6 +741,32 @@ public class dashboard_admin extends javax.swing.JFrame {
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_jTable2MouseClicked
+
+    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+        // TODO add your handling code here:
+         int row = jTable2.getSelectedRow();
+
+            if (row == -1) {
+                JOptionPane.showMessageDialog(this, "Pilih data dulu!");
+                return;
+            }
+
+            // ambil data dari JTable
+            int id = Integer.parseInt(jTable2.getValueAt(row, 0).toString());
+            String nama = jTable2.getValueAt(row, 2).toString();
+            String kategori = jTable2.getValueAt(row, 3).toString();
+            String harga = jTable2.getValueAt(row, 4).toString();
+            String stok = jTable2.getValueAt(row, 5).toString();
+
+            // buka form kelola produk
+            kelolaproduk_admin form = new kelolaproduk_admin();
+
+            // kirim data ke form (INI PENTING)
+            form.setDataEdit(id, nama, kategori, harga, stok);
+
+            form.setVisible(true);
+            this.dispose(); // optional
+    }//GEN-LAST:event_jButton11ActionPerformed
 
     /**
      * @param args the command line arguments
