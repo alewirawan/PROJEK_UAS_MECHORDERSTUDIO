@@ -20,7 +20,7 @@ public class detail_pesanan extends javax.swing.JFrame {
     
     public detail_pesanan() {
         initComponents();
-        
+        setLocationRelativeTo(null);
         tampilData();
     }
     
