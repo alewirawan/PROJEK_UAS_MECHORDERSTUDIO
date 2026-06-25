@@ -17,6 +17,7 @@ public class status_pesanan extends javax.swing.JFrame {
      */
     public status_pesanan() {
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**
