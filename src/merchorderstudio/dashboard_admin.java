@@ -29,6 +29,7 @@ public class dashboard_admin extends javax.swing.JFrame {
      */
     public dashboard_admin() {
         initComponents();
+        setLocationRelativeTo(null);
         
         jTable2.setModel(new DefaultTableModel(
     new Object[][]{},
