@@ -178,6 +178,7 @@ public class loginForm extends javax.swing.JFrame {
         jButton3.setBorderPainted(false);
         jButton3.setContentAreaFilled(false);
         jButton3.setFocusPainted(false);
+        jButton3.addActionListener(this::jButton3ActionPerformed);
         jPanel2.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 240, -1, -1));
 
         jLabel5.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 10)); // NOI18N
@@ -231,6 +232,10 @@ public class loginForm extends javax.swing.JFrame {
         new register().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
