@@ -8,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.Connection;
 import config.koneksi;
 import javax.swing.JOptionPane;
+import utility.keylistener;
+import utility.validasi;
 
 /**
  *
@@ -56,6 +58,8 @@ public class register extends javax.swing.JFrame {
         jTextField4 = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         jTextField3 = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("MerchOrder");
@@ -70,6 +74,11 @@ public class register extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("MerchOrder");
+        jLabel8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel8MouseClicked(evt);
+            }
+        });
 
         jLabel9.setForeground(new java.awt.Color(176, 176, 176));
         jLabel9.setText("Custom Merchandise");
@@ -77,6 +86,11 @@ public class register extends javax.swing.JFrame {
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(255, 107, 0));
         jLabel10.setText("Studio");
+        jLabel10.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel10MouseClicked(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(176, 176, 176));
@@ -155,7 +169,7 @@ public class register extends javax.swing.JFrame {
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Sign Up");
         jButton1.addActionListener(this::jButton1ActionPerformed);
-        jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 370, 170, 43));
+        jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 360, 170, 43));
 
         jLabel5.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 10)); // NOI18N
         jLabel5.setText("Masukkan data anda");
@@ -180,7 +194,26 @@ public class register extends javax.swing.JFrame {
         jPanel2.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 290, -1, -1));
 
         jTextField3.addActionListener(this::jTextField3ActionPerformed);
+        jTextField3.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextField3KeyTyped(evt);
+            }
+        });
         jPanel2.add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(13, 195, 170, 39));
+
+        jLabel14.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 10)); // NOI18N
+        jLabel14.setText("Sudah Punya Akun?");
+        jPanel2.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(35, 410, -1, -1));
+
+        jButton2.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 10)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jButton2.setText("<html><font color = \"FF6B00\">Log In</font></html>");
+        jButton2.setBorder(null);
+        jButton2.setBorderPainted(false);
+        jButton2.setContentAreaFilled(false);
+        jButton2.setFocusPainted(false);
+        jButton2.addActionListener(this::jButton2ActionPerformed);
+        jPanel2.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 410, -1, -1));
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(183, 6, 200, 440));
 
@@ -195,20 +228,17 @@ public class register extends javax.swing.JFrame {
         String email = jTextField4.getText().trim();
         String pw = new String(jPasswordField1.getPassword());
         
-        if (nama.isEmpty()){
-            JOptionPane.showMessageDialog(this, "Nama Belum Diisi");
+        if(validasi.isEmpty(nama) || validasi.isEmpty(alamat) || validasi.isEmpty(noTelp) ||
+                validasi.isEmpty(email) || validasi.isEmpty(pw)) {
+            JOptionPane.showMessageDialog(this, "Semua Field Wajib Diisi!");
             return;
-        } else if (alamat.isEmpty()){
-            JOptionPane.showMessageDialog(this, "Alamat Masih Kosong");
+        } else if(!validasi.isValidEmail(email)){
+            JOptionPane.showMessageDialog(this, "Email Tidak Valid!");
+            
+            jTextField4.requestFocus();
             return;
-        } else if (noTelp.isEmpty()){
-            JOptionPane.showMessageDialog(this, "Masukkan No Telepon");
-            return;
-        } else if (email.isEmpty()){
-            JOptionPane.showMessageDialog(this, "Email Belum Diisi");
-            return;
-        } else if (pw.isEmpty()){
-            JOptionPane.showMessageDialog(this, "Password masih Kosong");
+        } else if(validasi.isEmailExists(email)){
+            JOptionPane.showMessageDialog(this, "Email Sudah Terdaftar");
             return;
         }
         
@@ -257,6 +287,25 @@ public class register extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField3ActionPerformed
 
+    private void jTextField3KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField3KeyTyped
+        // TODO add your handling code here:
+        keylistener.onlyNumber(evt, jTextField3, 13);
+    }//GEN-LAST:event_jTextField3KeyTyped
+
+    private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel8MouseClicked
+
+    private void jLabel10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel10MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel10MouseClicked
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        new loginForm().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -284,11 +333,13 @@ public class register extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

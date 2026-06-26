@@ -26,6 +26,7 @@ public class kelolaproduk_admin extends javax.swing.JFrame {
      */
     public kelolaproduk_admin() {
         initComponents();
+        setLocationRelativeTo(null);
         mode = "ADD";
 }
     

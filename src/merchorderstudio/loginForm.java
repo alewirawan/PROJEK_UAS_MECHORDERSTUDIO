@@ -9,6 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import config.koneksi;
 import javax.swing.JOptionPane;
+import utility.sessions;
+import utility.validasi;
 
 /**
  *
@@ -195,8 +197,11 @@ public class loginForm extends javax.swing.JFrame {
         String email = jTextField1.getText().trim();
         String pw = new String(jPasswordField1.getPassword());
         
-        if (email.isEmpty() || pw.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Field Tidak Boleh Kosong");
+        if (validasi.isEmpty(email) || validasi.isEmpty(pw)) {
+            JOptionPane.showMessageDialog(this, "Email dan Password Tidak Boleh Kosong!");
+            return;
+        } else if (!validasi.isValidEmail(email)){
+            JOptionPane.showMessageDialog(this, "Email Tidak Valid!");
             return;
         }
         
@@ -204,16 +209,24 @@ public class loginForm extends javax.swing.JFrame {
         
         Connection conn = koneksi.getConnection();
         
-        try (PreparedStatement ps = conn.prepareStatement(sql)){
-            ps.setString(1, email);
-            ps.setString(2, pw);
+        try (PreparedStatement pst = conn.prepareStatement(sql)){
+            pst.setString(1, email);
+            pst.setString(2, pw);
             
-            ResultSet rs = ps.executeQuery();
+            ResultSet rs = pst.executeQuery();
             
             if(rs.next()){
+                sessions.idUser = rs.getInt("id_user");
+                sessions.nama = rs.getString("nama");
+                sessions.email = rs.getString("email");
+                sessions.role = rs.getString("role");
                 JOptionPane.showMessageDialog(this, "Login Berhasil");
                 
-                new home().setVisible(true);
+                if(sessions.role.equals("admin")){
+                    new dashboard_admin().setVisible(true);
+                } else {
+                    new home().setVisible(true);
+                }
                 this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "Email atau Password Salah!");
