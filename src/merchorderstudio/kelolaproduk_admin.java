@@ -16,6 +16,7 @@ import config.koneksi;
  */
 public class kelolaproduk_admin extends javax.swing.JFrame {
     
+    private dashboard_admin dashboard;
     private String pathGambar = "";
     String mode = "ADD";
     int idProduk;
@@ -25,11 +26,12 @@ public class kelolaproduk_admin extends javax.swing.JFrame {
     /**
      * Creates new form kelolaproduk_admin
      */
+    
     public kelolaproduk_admin() {
         initComponents();
         setLocationRelativeTo(null);
         mode = "ADD";
-}
+    }
     
     private void clearForm() {
         Produk.setText("");
@@ -38,6 +40,13 @@ public class kelolaproduk_admin extends javax.swing.JFrame {
         Gambar.setText("");
         pathGambar = "";
     }
+    
+    public kelolaproduk_admin(dashboard_admin dashboard) {
+        initComponents();
+        this.dashboard = dashboard;
+        setLocationRelativeTo(null);
+        mode = "ADD";
+}
     
     public void setDataEdit(int id,String nama, String kategori, String harga, String stok) {
         
@@ -79,6 +88,7 @@ public class kelolaproduk_admin extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -114,7 +124,7 @@ public class kelolaproduk_admin extends javax.swing.JFrame {
 
         jLabel8.setText("Ukuran");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "M", "L", "XL" }));
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "S", "M", "L", "XL" }));
 
         jLabel9.setText("Deskripsi");
 
@@ -172,7 +182,7 @@ public class kelolaproduk_admin extends javax.swing.JFrame {
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Deskripsi, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -187,13 +197,19 @@ public class kelolaproduk_admin extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 102, 0));
         jLabel1.setText("MerchOrder");
 
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setText("Tambah Produk");
+        jLabel7.setText("Studio");
+
+        jButton1.setBackground(new java.awt.Color(255, 102, 0));
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("KEMBALI");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -202,12 +218,18 @@ public class kelolaproduk_admin extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(46, 46, 46)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(57, 57, 57)
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addComponent(jLabel7)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(23, 23, 23)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18)))
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -216,14 +238,17 @@ public class kelolaproduk_admin extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(8, 8, 8)
-                        .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
                         .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 511, Short.MAX_VALUE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(15, 15, 15))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -398,12 +423,17 @@ public class kelolaproduk_admin extends javax.swing.JFrame {
                     "Produk berhasil diupdate!");
             }
 
-            dashboard_admin admin =
-            new dashboard_admin();
-
-            admin.setVisible(true);
-
-            this.dispose();
+            if (dashboard != null) {
+                dashboard.showCard("produk");
+                dashboard.setVisible(true);
+                this.dispose();
+                
+            } else {
+                dashboard_admin admin = new dashboard_admin();
+                admin.showCard("produk");
+                admin.setVisible(true);
+                this.dispose();
+}
 
             clearForm();
 
@@ -439,6 +469,21 @@ public class kelolaproduk_admin extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_GambarActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    
+            if (dashboard != null) {
+            dashboard.showCard("produk");
+            dashboard.setVisible(true);
+            this.dispose();
+        } else {
+            dashboard_admin admin = new dashboard_admin();
+            admin.showCard("produk");
+            admin.setVisible(true);
+            this.dispose();
+        }   
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -471,6 +516,7 @@ public class kelolaproduk_admin extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> Kategori;
     private javax.swing.JTextField Produk;
     private javax.swing.JTextField Stok;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JComboBox<String> jComboBox2;
