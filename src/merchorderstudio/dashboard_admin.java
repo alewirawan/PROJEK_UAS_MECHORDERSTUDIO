@@ -4,6 +4,7 @@
  */
 package merchorderstudio;
 import javax.swing.JTable;
+import java.io.File;
 import java.text.MessageFormat;
 import java.awt.CardLayout;
 import java.awt.Image;
@@ -616,22 +617,58 @@ public class dashboard_admin extends javax.swing.JFrame {
         "OR p.status_pesanan LIKE ?)";
 
         Connection conn = koneksi.getConnection();
-        PreparedStatement pst = conn.prepareStatement(sql);
+
+        PreparedStatement pst =
+        conn.prepareStatement(sql);
 
         for(int i = 1; i <= 4; i++){
-            pst.setString(i, "%" + keyword + "%");
+
+            pst.setString(
+            i,
+            "%" + keyword + "%");
+
         }
 
         ResultSet rs = pst.executeQuery();
 
         while(rs.next()) {
 
+            ImageIcon desainIcon = null;
+
+            String pathDesain =
+            rs.getString("upload_desain");
+
+            if(pathDesain != null &&
+               !pathDesain.trim().isEmpty()){
+
+                File file =
+                new File(pathDesain);
+
+                if(file.exists()){
+
+                    ImageIcon icon =
+                    new ImageIcon(pathDesain);
+
+                    Image img =
+                    icon.getImage()
+                    .getScaledInstance(
+                    70,
+                    70,
+                    Image.SCALE_SMOOTH);
+
+                    desainIcon =
+                    new ImageIcon(img);
+
+                }
+
+            }
+
             model.addRow(new Object[]{
                 rs.getInt("id_pesanan"),
                 rs.getString("nama"),
                 rs.getString("nama_produk"),
                 rs.getInt("jumlah"),
-                rs.getString("upload_desain"),
+                desainIcon,
                 rs.getString("catatan"),
                 rs.getString("status_pesanan")
             });
@@ -639,11 +676,19 @@ public class dashboard_admin extends javax.swing.JFrame {
         }
 
         TabelProduksi.setModel(model);
-        
-        TabelProduksi.setRowHeight(45);
+
+        TabelProduksi.setRowHeight(70);
+
+        setupTableRenderer();
 
     } catch(Exception e) {
-        JOptionPane.showMessageDialog(null, e.getMessage());
+
+        JOptionPane.showMessageDialog(
+        null,
+        e.getMessage());
+
+        e.printStackTrace();
+
     }
 }
     
