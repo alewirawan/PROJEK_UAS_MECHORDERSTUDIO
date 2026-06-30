@@ -4,6 +4,7 @@
  */
 package merchorderstudio;
 import javax.swing.JTable;
+import java.io.File;
 import java.text.MessageFormat;
 import java.awt.CardLayout;
 import java.awt.Image;
@@ -475,8 +476,8 @@ public class dashboard_admin extends javax.swing.JFrame {
                 Image img =
                 icon.getImage()
                 .getScaledInstance(
-                        80,
-                        80,
+                        60,
+                        60,
                         Image.SCALE_SMOOTH
                 );
 
@@ -498,19 +499,7 @@ public class dashboard_admin extends javax.swing.JFrame {
 
         }
 
-        TabelProduk.setRowHeight(100);
-
-        TabelProduk.getColumnModel()
-        .getColumn(0)
-        .setMinWidth(0);
-
-        TabelProduk.getColumnModel()
-        .getColumn(0)
-        .setMaxWidth(0);
-
-        TabelProduk.getColumnModel()
-        .getColumn(0)
-        .setPreferredWidth(0);
+        TabelProduk.setRowHeight(80);
 
         rs.close();
         pst.close();
@@ -599,39 +588,95 @@ public class dashboard_admin extends javax.swing.JFrame {
 
     try {
 
-        String keyword = cariproduksi.getText();
+        String keyword = cariproduksi.getText().trim();
+
+        String status =
+        cmbStatusProduksi.getSelectedItem().toString();
 
         String sql =
-        "SELECT p.id_pesanan, u.nama, pr.nama_produk, dp.jumlah, " +
-        "dp.upload_desain, dp.catatan, p.status_pesanan " +
+        "SELECT p.id_pesanan, u.nama, pr.nama_produk, " +
+        "dp.jumlah, dp.upload_desain, dp.catatan, " +
+        "p.status_pesanan " +
         "FROM pesanan p " +
         "INNER JOIN users u ON p.id_user = u.id_user " +
         "INNER JOIN detail_pesanan dp ON p.id_pesanan = dp.id_pesanan " +
         "INNER JOIN produk pr ON dp.id_produk = pr.id_produk " +
         "INNER JOIN pembayaran pb ON p.id_pesanan = pb.id_pesanan " +
-        "WHERE pb.status_bayar='lunas' " +
+        "WHERE pb.status_bayar='lunas' ";
+
+        // Filter Status
+        if(!status.equalsIgnoreCase("Semua")){
+
+            sql += "AND p.status_pesanan=? ";
+
+        }
+
+        sql +=
         "AND (CAST(p.id_pesanan AS CHAR) LIKE ? " +
         "OR u.nama LIKE ? " +
         "OR pr.nama_produk LIKE ? " +
         "OR p.status_pesanan LIKE ?)";
 
         Connection conn = koneksi.getConnection();
-        PreparedStatement pst = conn.prepareStatement(sql);
 
-        for(int i = 1; i <= 4; i++){
-            pst.setString(i, "%" + keyword + "%");
+        PreparedStatement pst =
+        conn.prepareStatement(sql);
+
+        int index = 1;
+
+        if(!status.equalsIgnoreCase("Semua")){
+
+            pst.setString(index, status.toLowerCase());
+            index++;
+
         }
+
+        pst.setString(index++, "%" + keyword + "%");
+        pst.setString(index++, "%" + keyword + "%");
+        pst.setString(index++, "%" + keyword + "%");
+        pst.setString(index++, "%" + keyword + "%");
 
         ResultSet rs = pst.executeQuery();
 
         while(rs.next()) {
+
+            ImageIcon desainIcon = null;
+
+            String pathDesain =
+            rs.getString("upload_desain");
+
+            if(pathDesain != null &&
+               !pathDesain.trim().isEmpty()){
+
+                File file =
+                new File(pathDesain);
+
+                if(file.exists()){
+
+                    ImageIcon icon =
+                    new ImageIcon(pathDesain);
+
+                    Image img =
+                    icon.getImage()
+                    .getScaledInstance(
+                        70,
+                        70,
+                        Image.SCALE_SMOOTH
+                    );
+
+                    desainIcon =
+                    new ImageIcon(img);
+
+                }
+
+            }
 
             model.addRow(new Object[]{
                 rs.getInt("id_pesanan"),
                 rs.getString("nama"),
                 rs.getString("nama_produk"),
                 rs.getInt("jumlah"),
-                rs.getString("upload_desain"),
+                desainIcon,
                 rs.getString("catatan"),
                 rs.getString("status_pesanan")
             });
@@ -639,11 +684,19 @@ public class dashboard_admin extends javax.swing.JFrame {
         }
 
         TabelProduksi.setModel(model);
-        
-        TabelProduksi.setRowHeight(45);
+
+        TabelProduksi.setRowHeight(70);
+
+        setupTableRenderer();
 
     } catch(Exception e) {
-        JOptionPane.showMessageDialog(null, e.getMessage());
+
+        JOptionPane.showMessageDialog(
+            null,
+            e.getMessage()
+        );
+
+        e.printStackTrace();
     }
 }
     
@@ -911,9 +964,50 @@ public class dashboard_admin extends javax.swing.JFrame {
 
 }
     
-   public void showCard(String namaPanel) {
-    CardLayout card = (CardLayout) jPanel2.getLayout();
-    card.show(jPanel2, namaPanel);
+  public void showCard(String namaPanel) {
+
+    if(namaPanel.equals("dashboard")){
+
+        Tampilkan();
+        DataDashboard();
+
+        }
+        else if(namaPanel.equals("pesanan")){
+
+            DataPesanan();
+
+        }
+        else if(namaPanel.equals("produk")){
+
+            DataProduk();
+
+        }
+        else if(namaPanel.equals("pembayaran")){
+
+            DataPembayaran();
+
+        }
+        else if(namaPanel.equals("produksi")){
+
+            DataProduksi();
+
+        }
+        else if(namaPanel.equals("pelanggan")){
+
+            DataPelanggan();
+
+        }
+        else if(namaPanel.equals("Laporan")){
+
+            DataLaporan();
+            TotalPemasukan();
+
+        }
+
+        CardLayout card =
+        (CardLayout) jPanel2.getLayout();
+
+        card.show(jPanel2, namaPanel);
 }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -1014,12 +1108,13 @@ public class dashboard_admin extends javax.swing.JFrame {
         jPanel26 = new javax.swing.JPanel();
         jScrollPane7 = new javax.swing.JScrollPane();
         TabelProduksi = new javax.swing.JTable();
-        btnSelesaiProduksi = new javax.swing.JButton();
-        btnProsesProduksi = new javax.swing.JButton();
+        btnProses = new javax.swing.JButton();
+        btnSelesai = new javax.swing.JButton();
         cariproduksi = new javax.swing.JTextField();
         btnPesanan1 = new javax.swing.JButton();
         jPanel21 = new javax.swing.JPanel();
         jLabel33 = new javax.swing.JLabel();
+        cmbStatusProduksi = new javax.swing.JComboBox<>();
         HalPelanggan = new javax.swing.JPanel();
         jPanel24 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -1732,7 +1827,7 @@ public class dashboard_admin extends javax.swing.JFrame {
             }
         ));
         TabelProduk.setGridColor(new java.awt.Color(255, 255, 255));
-        TabelProduk.setRowHeight(80);
+        TabelProduk.setRowHeight(100);
         TabelProduk.setRowMargin(5);
         jScrollPane2.setViewportView(TabelProduk);
 
@@ -2006,15 +2101,15 @@ public class dashboard_admin extends javax.swing.JFrame {
         TabelProduksi.setRowMargin(5);
         jScrollPane7.setViewportView(TabelProduksi);
 
-        btnSelesaiProduksi.setBackground(new java.awt.Color(102, 153, 255));
-        btnSelesaiProduksi.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnSelesaiProduksi.setForeground(new java.awt.Color(255, 255, 255));
-        btnSelesaiProduksi.setText("PROSES");
-        btnSelesaiProduksi.addActionListener(this::btnSelesaiProduksiActionPerformed);
+        btnProses.setBackground(new java.awt.Color(102, 153, 255));
+        btnProses.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnProses.setForeground(new java.awt.Color(255, 255, 255));
+        btnProses.setText("PROSES");
+        btnProses.addActionListener(this::btnProsesActionPerformed);
 
-        btnProsesProduksi.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnProsesProduksi.setText("SELESAI");
-        btnProsesProduksi.addActionListener(this::btnProsesProduksiActionPerformed);
+        btnSelesai.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnSelesai.setText("SELESAI");
+        btnSelesai.addActionListener(this::btnSelesaiActionPerformed);
 
         cariproduksi.addActionListener(this::cariproduksiActionPerformed);
         cariproduksi.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -2053,6 +2148,12 @@ public class dashboard_admin extends javax.swing.JFrame {
                 .addContainerGap(17, Short.MAX_VALUE))
         );
 
+        cmbStatusProduksi.setBackground(new java.awt.Color(51, 102, 255));
+        cmbStatusProduksi.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        cmbStatusProduksi.setForeground(new java.awt.Color(255, 255, 255));
+        cmbStatusProduksi.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Semua", "Pending", "Diproses", "Produksi", "Selesai" }));
+        cmbStatusProduksi.addActionListener(this::cmbStatusProduksiActionPerformed);
+
         javax.swing.GroupLayout jPanel26Layout = new javax.swing.GroupLayout(jPanel26);
         jPanel26.setLayout(jPanel26Layout);
         jPanel26Layout.setHorizontalGroup(
@@ -2064,14 +2165,17 @@ public class dashboard_admin extends javax.swing.JFrame {
                     .addGroup(jPanel26Layout.createSequentialGroup()
                         .addGroup(jPanel26Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel26Layout.createSequentialGroup()
-                                .addComponent(btnSelesaiProduksi, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnProses, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(btnProsesProduksi, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(btnSelesai, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel26Layout.createSequentialGroup()
                                 .addComponent(cariproduksi, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(btnPesanan1, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel26Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(cmbStatusProduksi, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
             .addComponent(jPanel21, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -2083,13 +2187,14 @@ public class dashboard_admin extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel26Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnPesanan1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cariproduksi, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cariproduksi, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbStatusProduksi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel26Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSelesaiProduksi, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnProsesProduksi, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnProses, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSelesai, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -2447,7 +2552,7 @@ public class dashboard_admin extends javax.swing.JFrame {
         jPanel7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel7.setPreferredSize(new java.awt.Dimension(165, 100));
 
-        jLabel43.setText("Total Pemasukan");
+        jLabel43.setText("Produk Terjual");
 
         lblProdukTerjualLap.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblProdukTerjualLap.setForeground(new java.awt.Color(255, 102, 0));
@@ -2465,7 +2570,7 @@ public class dashboard_admin extends javax.swing.JFrame {
                     .addComponent(jLabel45)
                     .addComponent(lblProdukTerjualLap)
                     .addComponent(jLabel43))
-                .addContainerGap(55, Short.MAX_VALUE))
+                .addContainerGap(69, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2633,81 +2738,255 @@ public class dashboard_admin extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_caripesananKeyPressed
 
-    private void btnSelesaiProduksiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelesaiProduksiActionPerformed
+    private void btnProsesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProsesActionPerformed
         // TODO add your handling code here:
             try {
 
-            int row = TabelProduksi.getSelectedRow();
+                int row = TabelProduksi.getSelectedRow();
 
-            if(row == -1){
-                JOptionPane.showMessageDialog(null,
-                "Pilih pesanan terlebih dahulu");
-                return;
+                if(row == -1){
+
+                    JOptionPane.showMessageDialog(
+                        null,
+                        "Pilih pesanan terlebih dahulu"
+                    );
+
+                    return;
+                }
+
+                int idPesanan = Integer.parseInt(
+                    TabelProduksi.getValueAt(row, 0).toString()
+                );
+
+                String statusSekarang =
+                TabelProduksi.getValueAt(row, 6)
+                .toString();
+
+                String statusBaru = "";
+
+                Connection conn = koneksi.getConnection();
+
+                conn.setAutoCommit(false);
+
+                try {
+
+                    // Pending → Diproses
+                    if(statusSekarang.equalsIgnoreCase("pending")){
+
+                        statusBaru = "diproses";
+
+                    }
+
+                    // Diproses → Produksi
+                    else if(statusSekarang.equalsIgnoreCase("diproses")){
+
+                        statusBaru = "produksi";
+
+                        String sqlProduk =
+                        "SELECT id_produk, jumlah " +
+                        "FROM detail_pesanan " +
+                        "WHERE id_pesanan=?";
+
+                        PreparedStatement pstProduk =
+                        conn.prepareStatement(sqlProduk);
+
+                        pstProduk.setInt(1, idPesanan);
+
+                        ResultSet rsProduk =
+                        pstProduk.executeQuery();
+
+                        while(rsProduk.next()){
+
+                            int idProduk =
+                            rsProduk.getInt("id_produk");
+
+                            int jumlah =
+                            rsProduk.getInt("jumlah");
+
+                            // CEK STOK
+                            String sqlCek =
+                            "SELECT stok " +
+                            "FROM produk " +
+                            "WHERE id_produk=?";
+
+                            PreparedStatement pstCek =
+                            conn.prepareStatement(sqlCek);
+
+                            pstCek.setInt(1, idProduk);
+
+                            ResultSet rsCek =
+                            pstCek.executeQuery();
+
+                            if(rsCek.next()){
+
+                                int stok =
+                                rsCek.getInt("stok");
+
+                                if(stok < jumlah){
+
+                                    JOptionPane.showMessageDialog(
+                                        null,
+                                        "Stok produk tidak mencukupi!"
+                                    );
+
+                                    conn.rollback();
+                                    return;
+                                }
+                            }
+
+                            // KURANGI STOK
+                            String sqlUpdateStok =
+                            "UPDATE produk " +
+                            "SET stok = stok - ? " +
+                            "WHERE id_produk=?";
+
+                            PreparedStatement pstUpdate =
+                            conn.prepareStatement(sqlUpdateStok);
+
+                            pstUpdate.setInt(1, jumlah);
+                            pstUpdate.setInt(2, idProduk);
+
+                            pstUpdate.executeUpdate();
+                        }
+                    }
+
+                    // Sudah Produksi
+                    else if(statusSekarang.equalsIgnoreCase("produksi")){
+
+                        JOptionPane.showMessageDialog(
+                            null,
+                            "Pesanan sudah berada di tahap produksi"
+                        );
+
+                        conn.rollback();
+                        return;
+                    }
+
+                    // Sudah Selesai
+                    else if(statusSekarang.equalsIgnoreCase("selesai")){
+
+                        JOptionPane.showMessageDialog(
+                            null,
+                            "Pesanan sudah selesai"
+                        );
+
+                        conn.rollback();
+                        return;
+                    }
+
+                    // UPDATE STATUS PESANAN
+                    String sql =
+                    "UPDATE pesanan " +
+                    "SET status_pesanan=? " +
+                    "WHERE id_pesanan=?";
+
+                    PreparedStatement pst =
+                    conn.prepareStatement(sql);
+
+                    pst.setString(1, statusBaru);
+                    pst.setInt(2, idPesanan);
+
+                    pst.executeUpdate();
+
+                    conn.commit();
+
+                    JOptionPane.showMessageDialog(
+                        null,
+                        "Status berhasil diubah menjadi " +
+                        statusBaru
+                    );
+
+                    DataProduksi();
+
+                } catch(Exception e){
+
+                    conn.rollback();
+
+                    JOptionPane.showMessageDialog(
+                        null,
+                        "Error : " + e.getMessage()
+                    );
+                }
+
+                conn.setAutoCommit(true);
+
+            } catch(Exception e){
+
+                JOptionPane.showMessageDialog(
+                    null,
+                    e.getMessage()
+                );
+
+                e.printStackTrace();
             }
+    }//GEN-LAST:event_btnProsesActionPerformed
 
-            int idPesanan = Integer.parseInt(
-                TabelProduksi.getValueAt(row, 0).toString()
-            );
-
-            String sql =
-            "UPDATE pesanan " +
-            "SET status_pesanan='produksi' " +
-            "WHERE id_pesanan=?";
-
-            Connection conn = koneksi.getConnection();
-            PreparedStatement pst = conn.prepareStatement(sql);
-
-            pst.setInt(1, idPesanan);
-
-            pst.executeUpdate();
-
-            JOptionPane.showMessageDialog(null,
-            "Pesanan masuk proses produksi");
-
-            DataProduksi();
-
-        } catch(Exception e){
-            JOptionPane.showMessageDialog(null, e.getMessage());
-        }
-    }//GEN-LAST:event_btnSelesaiProduksiActionPerformed
-
-    private void btnProsesProduksiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProsesProduksiActionPerformed
+    private void btnSelesaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelesaiActionPerformed
         // TODO add your handling code here:
             try {
 
-            int row = TabelProduksi.getSelectedRow();
+                int row = TabelProduksi.getSelectedRow();
 
-            if(row == -1){
-                JOptionPane.showMessageDialog(null,
-                "Pilih pesanan terlebih dahulu");
-                return;
+                if(row == -1){
+
+                    JOptionPane.showMessageDialog(
+                        null,
+                        "Pilih pesanan terlebih dahulu"
+                    );
+
+                    return;
+                }
+
+                int idPesanan = Integer.parseInt(
+                    TabelProduksi.getValueAt(row, 0).toString()
+                );
+
+                String status = TabelProduksi
+                        .getValueAt(row, 6)
+                        .toString();
+
+                // Hanya boleh selesai jika status produksi
+                if(!status.equalsIgnoreCase("produksi")){
+
+                    JOptionPane.showMessageDialog(
+                        null,
+                        "Pesanan harus berada pada status PRODUKSI terlebih dahulu!"
+                    );
+
+                    return;
+                }
+
+                String sql =
+                "UPDATE pesanan " +
+                "SET status_pesanan='selesai' " +
+                "WHERE id_pesanan=?";
+
+                Connection conn =
+                koneksi.getConnection();
+
+                PreparedStatement pst =
+                conn.prepareStatement(sql);
+
+                pst.setInt(1, idPesanan);
+
+                pst.executeUpdate();
+
+                JOptionPane.showMessageDialog(
+                    null,
+                    "Produksi selesai"
+                );
+
+                DataProduksi();
+
+            } catch(Exception e){
+
+                JOptionPane.showMessageDialog(
+                    null,
+                    e.getMessage()
+                );
+
             }
-
-            int idPesanan = Integer.parseInt(
-                TabelProduksi.getValueAt(row, 0).toString()
-            );
-
-            String sql =
-            "UPDATE pesanan " +
-            "SET status_pesanan='selesai' " +
-            "WHERE id_pesanan=?";
-
-            Connection conn = koneksi.getConnection();
-            PreparedStatement pst = conn.prepareStatement(sql);
-
-            pst.setInt(1, idPesanan);
-
-            pst.executeUpdate();
-
-            JOptionPane.showMessageDialog(null,
-            "Produksi selesai");
-
-            DataProduksi();
-
-        } catch(Exception e){
-            JOptionPane.showMessageDialog(null, e.getMessage());
-        }
-    }//GEN-LAST:event_btnProsesProduksiActionPerformed
+    }//GEN-LAST:event_btnSelesaiActionPerformed
 
     private void cariproduksiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cariproduksiActionPerformed
         // TODO add your handling code here:
@@ -2843,62 +3122,85 @@ public class dashboard_admin extends javax.swing.JFrame {
         // TODO add your handling code here:
         int row = TabelProduk.getSelectedRow();
 
-        if (row == -1) {
-            JOptionPane.showMessageDialog(
-                this,
-                "Pilih produk yang ingin dihapus!"
+            if(row == -1){
+
+                JOptionPane.showMessageDialog(
+                    null,
+                    "Pilih produk terlebih dahulu!"
+                );
+
+                return;
+            }
+
+            int idProduk = Integer.parseInt(
+                TabelProduk.getValueAt(row, 0).toString()
             );
-            return;
-        }
-
-        int konfirmasi = JOptionPane.showConfirmDialog(
-            this,
-            "Apakah Anda yakin ingin menghapus produk ini?",
-            "Konfirmasi Hapus",
-            JOptionPane.YES_NO_OPTION
-        );
-
-        if (konfirmasi == JOptionPane.YES_OPTION) {
 
             try {
 
-                int id = Integer.parseInt(
-                    TabelProduk.getValueAt(row, 0).toString()
-                );
-
                 Connection conn = koneksi.getConnection();
 
-                String sql =
-                "DELETE FROM produk WHERE id_produk = ?";
+                String cekSql =
+                "SELECT COUNT(*) AS total " +
+                "FROM detail_pesanan " +
+                "WHERE id_produk=?";
 
-                PreparedStatement pst =
-                conn.prepareStatement(sql);
+                PreparedStatement cekPst =
+                conn.prepareStatement(cekSql);
 
-                pst.setInt(1, id);
+                cekPst.setInt(1, idProduk);
 
-                pst.executeUpdate();
+                ResultSet rs = cekPst.executeQuery();
 
-                pst.close();
-                conn.close();
+                if(rs.next()){
 
-                JOptionPane.showMessageDialog(
-                    this,
-                    "Produk berhasil dihapus."
+                    int total = rs.getInt("total");
+
+                    if(total > 0){
+
+                        JOptionPane.showMessageDialog(
+                            null,
+                            "Produk tidak dapat dihapus karena sudah pernah dipesan!"
+                        );
+
+                        return;
+                    }
+                }
+
+                int confirm = JOptionPane.showConfirmDialog(
+                    null,
+                    "Yakin ingin menghapus produk ini?",
+                    "Konfirmasi",
+                    JOptionPane.YES_NO_OPTION
                 );
 
-                // Refresh tabel
-                DataProduk();
+                if(confirm == JOptionPane.YES_OPTION){
 
-            } catch (Exception e) {
+                    String sql =
+                    "DELETE FROM produk WHERE id_produk=?";
+
+                    PreparedStatement pst =
+                    conn.prepareStatement(sql);
+
+                    pst.setInt(1, idProduk);
+
+                    pst.executeUpdate();
+
+                    JOptionPane.showMessageDialog(
+                        null,
+                        "Produk berhasil dihapus!"
+                    );
+
+                    DataProduk();
+                }
+
+            } catch(Exception e){
 
                 JOptionPane.showMessageDialog(
-                    this,
-                    "Error : " + e.getMessage()
+                    null,
+                    "Error: " + e.getMessage()
                 );
-
-                e.printStackTrace();
             }
-        }
     }//GEN-LAST:event_btnDeleteProdukActionPerformed
 
     private void btnEditProdukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditProdukActionPerformed
@@ -2988,6 +3290,11 @@ public class dashboard_admin extends javax.swing.JFrame {
         DataPelanggan();
     }//GEN-LAST:event_btnPesanan3ActionPerformed
 
+    private void cmbStatusProduksiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbStatusProduksiActionPerformed
+        // TODO add your handling code here:
+        DataProduksi();
+    }//GEN-LAST:event_cmbStatusProduksiActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -3038,8 +3345,8 @@ public class dashboard_admin extends javax.swing.JFrame {
     private javax.swing.JButton btnPesanan1;
     private javax.swing.JButton btnPesanan2;
     private javax.swing.JButton btnPesanan3;
-    private javax.swing.JButton btnProsesProduksi;
-    private javax.swing.JButton btnSelesaiProduksi;
+    private javax.swing.JButton btnProses;
+    private javax.swing.JButton btnSelesai;
     private javax.swing.JTextField carilaporan;
     private javax.swing.JTextField caripelanggan;
     private javax.swing.JTextField caripemasukan;
@@ -3048,6 +3355,7 @@ public class dashboard_admin extends javax.swing.JFrame {
     private javax.swing.JTextField cariproduksi;
     private javax.swing.JComboBox<String> cmbBulan;
     private javax.swing.JComboBox<String> cmbKategoriProduk;
+    private javax.swing.JComboBox<String> cmbStatusProduksi;
     private javax.swing.JComboBox<String> cmbTahun;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
@@ -3078,7 +3386,6 @@ public class dashboard_admin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
-    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel31;
@@ -3100,7 +3407,6 @@ public class dashboard_admin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
