@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package merchorderstudio;
+
 import config.koneksi;
 import java.awt.Color;
 import java.sql.Connection;
@@ -18,116 +19,202 @@ import java.util.logging.Logger;
  * @author Ratih Nawang Wulan
  */
 public class status_pesanan extends javax.swing.JFrame {
-    
+
     private final Color WARNA_AKTIF = new Color(40, 167, 69); // Hijau
-    private final Color WARNA_MATI = new Color(180, 180, 180);  // Abu-abu
+    private final Color WARNA_MATI = new Color(180, 180, 180); // Abu-abu
     
     private static final Logger logger = Logger.getLogger(status_pesanan.class.getName());
+
     /**
      * Creates new form status_pesanan
      */
-public status_pesanan(int idPesanan) {
+ public status_pesanan(int idPesanan) {
     initComponents();
     setLocationRelativeTo(null);
-
     eksekusiTrackingOtomatis(String.valueOf(idPesanan));
+    
 }
+ 
+private void setLogo(javax.swing.JLabel label, boolean aktif, boolean besar) {
+    String aktifPath = "/merchorderstudio/resources/check_active.png";
+    String matiPath  = "/merchorderstudio/resources/check_inactive.png";
+
+    // Tentukan path sesuai kondisi
+     String path = aktif ? aktifPath : matiPath;
+    java.net.URL imgURL = getClass().getResource(path);
+
+    if (imgURL != null) {
+        javax.swing.ImageIcon icon = new javax.swing.ImageIcon(imgURL);
+        java.awt.Image img = icon.getImage();
+
+        // Tentukan ukuran: besar atau kecil
+        int size = besar ? 42 : 32;
+        java.awt.Image scaledImg = img.getScaledInstance(size, size, java.awt.Image.SCALE_SMOOTH);
+
+        label.setIcon(new javax.swing.ImageIcon(scaledImg));
+    }
+    label.setText("");
+}
+
     private void eksekusiTrackingOtomatis(String idPesananAtauNoOrder) {
+    String sql = "SELECT id_pesanan, status_pesanan, tanggal_pesan, total_harga FROM pesanan WHERE id_pesanan = ?";
 
-    System.out.println("Data yang dicari = " + idPesananAtauNoOrder);
-        String sql = "SELECT status_pesanan, tanggal_pesan, total_harga FROM pesanan WHERE id_pesanan = ?"; 
+    resetVisualTracking();
 
-        resetVisualTracking();
+    try (Connection conn = koneksi.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
 
-        try (Connection conn = koneksi.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            
-            ps.setInt(1, Integer.parseInt(idPesananAtauNoOrder.trim()));
-            
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    // Mengambil langsung menggunakan urutan kolom (Kolom 1 = status_pesanan)
-                    String statusDatabase = rs.getString(1); 
-                    Date tglPesan = rs.getTimestamp(2);
-                    
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy, HH:mm");
+        ps.setInt(1, Integer.parseInt(idPesananAtauNoOrder.trim()));
+        logger.info("Menjalankan query untuk ID Pesanan: " + idPesananAtauNoOrder);
 
-                    if (statusDatabase != null) {
-                        lblStatusBesar.setText(statusDatabase.toUpperCase());
-                        
-                        int levelStatus = 0;
-                        switch (statusDatabase.toLowerCase().trim()) {
-                            case "pesanan berhasil":    levelStatus = 1; break;
-                            case "pembayaran berhasil": levelStatus = 2; break;
-                            case "diproses":            levelStatus = 3; break;
-                            case "sedang dicetak":      levelStatus = 4; break;
-                            case "packing":             levelStatus = 5; break;
-                            case "selesai":             levelStatus = 6; break;
-                        }
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                int idPesanan = rs.getInt("id_pesanan");
+                jLabel3.setText("No Order : " + idPesanan);
+                
+                String statusDatabase = rs.getString("status_pesanan");
+                Date tglPesan = rs.getTimestamp("tanggal_pesan");
+                
+                jLabel1.setText("Status Pesanan");
 
-                        if (levelStatus >= 1 && tglPesan != null) {
-                            lblIconBerhasil.setForeground(WARNA_AKTIF);
-                            lblTglBerhasil.setText(sdf.format(tglPesan));
-                        }
-                        if (levelStatus >= 2) {
-                            lblIconBayar.setForeground(WARNA_AKTIF);
-                            lblTglBayar.setText(sdf.format(tglPesan));
-                        }
-                        if (levelStatus >= 3 && tglPesan != null) {
-                            lblIconProses.setForeground(WARNA_AKTIF);
-                            Calendar cal = Calendar.getInstance();
-                            cal.setTime(tglPesan);
-                            cal.add(Calendar.MINUTE, 30);
-                            lblTglProses.setText(sdf.format(cal.getTime()));
-                        }
-                        if (levelStatus >= 4 && tglPesan != null) {
-                            lblIconCetak.setForeground(WARNA_AKTIF);
-                            Calendar cal = Calendar.getInstance();
-                            cal.setTime(tglPesan);
-                            cal.add(Calendar.DAY_OF_YEAR, 1);
-                            lblTglCetak.setText(sdf.format(cal.getTime()));
-                        }
-                        if (levelStatus >= 5 && tglPesan != null) {
-                            lblIconPacking.setForeground(WARNA_AKTIF);
-                            Calendar cal = Calendar.getInstance();
-                            cal.setTime(tglPesan);
-                            cal.add(Calendar.DAY_OF_YEAR, 1);
-                            cal.add(Calendar.HOUR_OF_DAY, 2);
-                            lblTglPacking.setText(sdf.format(cal.getTime()));
-                        }
-                        if (levelStatus == 6 && tglPesan != null) {
-                            lblIconSelesai.setForeground(WARNA_AKTIF);
-                            Calendar cal = Calendar.getInstance();
-                            cal.setTime(tglPesan);
-                            cal.add(Calendar.DAY_OF_YEAR, 2);
-                            lblTglSelesai.setText(sdf.format(cal.getTime()));
-                        }
+                
+                SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy, HH:mm");
+                
+                int levelStatus = 0;
+                switch (statusDatabase.toLowerCase().trim()) {
+                    default: levelStatus = 0; break;                    
+                    case "pesanan berhasil":    levelStatus = 1; break;
+                    case "pembayaran berhasil": levelStatus = 2; break;
+                    case "diproses":            levelStatus = 3; break;
+                    case "sedang dicetak":      levelStatus = 4; break;
+                    case "packing":             levelStatus = 5; break;
+                    case "selesai":             levelStatus = 6; break;
+                }
+                
+               Date waktuSekarangLaptop = new Date(); 
+                
+                // Buat variabel boolean penanda aktif/tidaknya step tracking
+                boolean isStep1Aktif = false;
+                boolean isStep2Aktif = false;
+                boolean isStep3Aktif = false;
+                boolean isStep4Aktif = false;
+                boolean isStep5Aktif = false;
+                boolean isStep6Aktif = false;
+
+                // Level 1: Pesanan berhasil
+                if (levelStatus >= 1 && tglPesan != null) {
+                    jLabel2.setForeground(WARNA_AKTIF);
+                    jLabel4.setText(sdf.format(tglPesan));
+                    isStep1Aktif = true; // Selalu aktif jika data ada
+                }
+
+                // Level 2: Pembayaran berhasil
+                if (levelStatus >= 2 && tglPesan != null) {
+                    jLabel5.setForeground(WARNA_AKTIF);
+                    jLabel6.setText(sdf.format(tglPesan));
+                    isStep2Aktif = true; // Selalu aktif jika status pembayaran sukses
+                }
+
+                // Level 3: Diproses
+                if (levelStatus >= 3 && tglPesan != null) {
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(tglPesan);
+                    cal.add(Calendar.MINUTE, 30);
+                    Date waktuEstimasi = cal.getTime();
+
+                    if (waktuSekarangLaptop.after(waktuEstimasi)) {
+                        jLabel7.setForeground(WARNA_AKTIF);
+                        jLabel8.setText(sdf.format(waktuEstimasi)); // tampilkan tanggal
+                        isStep3Aktif = true;
+                    } else {
+                        jLabel7.setForeground(WARNA_MATI);
+                        jLabel8.setText(""); // kosongkan tanggal
                     }
-                } else {
+                }
+
+                // Level 4: Sedang dicetak
+                if (levelStatus >= 4 && tglPesan != null) {
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(tglPesan);
+                    cal.add(Calendar.DAY_OF_YEAR, 1);
+                    Date waktuEstimasi = cal.getTime();
+
+                    if (waktuSekarangLaptop.after(waktuEstimasi)) {
+                        jLabel9.setForeground(WARNA_AKTIF);
+                        jLabel10.setText(sdf.format(waktuEstimasi));
+                        isStep4Aktif = true;
+                    } else {
+                        jLabel9.setForeground(WARNA_MATI);
+                        jLabel10.setText("-"); // kosongkan tanggal
+                    }
+                }
+
+                // Level 5: Packing
+                if (levelStatus >= 5 && tglPesan != null) {
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(tglPesan);
+                    cal.add(Calendar.DAY_OF_YEAR, 1);
+                    cal.add(Calendar.HOUR_OF_DAY, 2);
+                    Date waktuEstimasi = cal.getTime();
+
+                    if (waktuSekarangLaptop.after(waktuEstimasi)) {
+                        jLabel11.setForeground(WARNA_AKTIF);
+                        jLabel12.setText(sdf.format(waktuEstimasi));
+                        isStep5Aktif = true;
+                    } else {
+                        jLabel11.setForeground(WARNA_MATI);
+                        jLabel12.setText("-"); // kosongkan tanggal
+                    }
+                }
+
+                // Level 6: Selesai
+               if (levelStatus == 6 && tglPesan != null) {
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(tglPesan);
+                    cal.add(Calendar.DAY_OF_YEAR, 2);
+                    Date waktuEstimasi = cal.getTime();
+
+                    if (waktuSekarangLaptop.after(waktuEstimasi)) {
+                        jLabel13.setForeground(WARNA_AKTIF);
+                        jLabel14.setText(sdf.format(waktuEstimasi));
+                        isStep6Aktif = true;
+                    } else {
+                        jLabel13.setForeground(WARNA_MATI);
+                        jLabel14.setText("-"); // kosongkan tanggal
+                    }
+               }
+               setLogo(jLabel15, isStep1Aktif, true);  // logo besar
+               setLogo(jLabel16, isStep2Aktif, false); // logo kecil
+               setLogo(jLabel17, isStep3Aktif, false);
+               setLogo(jLabel18, isStep4Aktif, false);
+               setLogo(jLabel20, isStep5Aktif, false);
+               setLogo(jLabel21, isStep6Aktif, false);
+            } else {
                     JOptionPane.showMessageDialog(this, "ID Transaksi tidak ditemukan.");
+                    logger.warning("ID Pesanan tidak ditemukan: " + idPesananAtauNoOrder);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Eror Sistem: " + e.getMessage());
+            logger.severe("Error sistem: " + e.getMessage());
         }
     }
 
     private void resetVisualTracking() {
-        lblIconBerhasil.setForeground(WARNA_MATI);
-        lblIconBayar.setForeground(WARNA_MATI);
-        lblIconProses.setForeground(WARNA_MATI);
-        lblIconCetak.setForeground(WARNA_MATI);
-        lblIconPacking.setForeground(WARNA_MATI);
-        lblIconSelesai.setForeground(WARNA_MATI);
-        
-        // Komponen yang belum tercapai akan tetap menampilkan strip standar
-        lblTglBerhasil.setText("-");
-        lblTglBayar.setText("-");
-        lblTglProses.setText("-");
-        lblTglCetak.setText("-");
-        lblTglPacking.setText("-");
-        lblTglSelesai.setText("-");
+        jLabel2.setForeground(WARNA_MATI);
+        jLabel5.setForeground(WARNA_MATI);
+        jLabel7.setForeground(WARNA_MATI);
+        jLabel9.setForeground(WARNA_MATI);
+        jLabel11.setForeground(WARNA_MATI);
+        jLabel13.setForeground(WARNA_MATI);
+
+        jLabel4.setText("-");
+        jLabel6.setText("-");
+        jLabel8.setText("-");
+        jLabel10.setText("-");
+        jLabel12.setText("-");
+        jLabel14.setText("-");
     }
     
 
@@ -140,39 +227,34 @@ public status_pesanan(int idPesanan) {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTextField1 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        lblStatusBesar = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        lblTglBerhasil = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        l = new javax.swing.JLabel();
-        lblTglBayar = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
-        lblTglProses = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
-        lblTglCetak = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        lblTglPacking = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
-        lblTglSelesai = new javax.swing.JLabel();
-        lblIconBerhasil = new javax.swing.JLabel();
-        lblIconBayar = new javax.swing.JLabel();
-        lblIconProses = new javax.swing.JLabel();
-        lblIconCetak = new javax.swing.JLabel();
-        jLabel19 = new javax.swing.JLabel();
-        lblIconPacking = new javax.swing.JLabel();
-        lblIconSelesai = new javax.swing.JLabel();
-        btnLihatDetail = new javax.swing.JButton();
-
-        jTextField1.setText("jTextField1");
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel20 = new javax.swing.JLabel();
+        jLabel21 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -183,14 +265,14 @@ public status_pesanan(int idPesanan) {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        lblStatusBesar.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
-        lblStatusBesar.setText("Pesanan Berhasil !");
+        jLabel2.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
+        jLabel2.setText("Pesanan Berhasil !");
 
         jLabel3.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
         jLabel3.setText("No Order :");
 
-        lblTglBerhasil.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
-        lblTglBerhasil.setText("Tanggal :");
+        jLabel4.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
+        jLabel4.setText("Tanggal :");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -199,30 +281,30 @@ public status_pesanan(int idPesanan) {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTglBerhasil)
+                    .addComponent(jLabel4)
                     .addComponent(jLabel3)
-                    .addComponent(lblStatusBesar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(330, 330, 330))
+                    .addComponent(jLabel2))
+                .addContainerGap(330, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addComponent(lblStatusBesar, javax.swing.GroupLayout.DEFAULT_SIZE, 24, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblTglBerhasil)
-                .addGap(6, 6, 6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel4)
+                .addContainerGap())
         );
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
-        l.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
-        l.setText("Pembayaran Berhasil !");
+        jLabel5.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
+        jLabel5.setText("Pembayaran Berhasil !");
 
-        lblTglBayar.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
-        lblTglBayar.setText("Tanggal / waktu");
+        jLabel6.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
+        jLabel6.setText("Tanggal / waktu");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -231,17 +313,17 @@ public status_pesanan(int idPesanan) {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(22, 22, 22)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTglBayar)
-                    .addComponent(l))
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel5))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addComponent(l)
+                .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblTglBayar)
+                .addComponent(jLabel6)
                 .addContainerGap(10, Short.MAX_VALUE))
         );
 
@@ -250,8 +332,8 @@ public status_pesanan(int idPesanan) {
         jLabel7.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
         jLabel7.setText("Diproses");
 
-        lblTglProses.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
-        lblTglProses.setText("Tanggal / waktu");
+        jLabel8.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
+        jLabel8.setText("Tanggal / waktu");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -260,7 +342,7 @@ public status_pesanan(int idPesanan) {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTglProses)
+                    .addComponent(jLabel8)
                     .addComponent(jLabel7))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -270,7 +352,7 @@ public status_pesanan(int idPesanan) {
                 .addGap(14, 14, 14)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblTglProses)
+                .addComponent(jLabel8)
                 .addContainerGap(11, Short.MAX_VALUE))
         );
 
@@ -279,8 +361,8 @@ public status_pesanan(int idPesanan) {
         jLabel9.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
         jLabel9.setText("Sedang dicetak");
 
-        lblTglCetak.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
-        lblTglCetak.setText("Tanggal / waktu");
+        jLabel10.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
+        jLabel10.setText("Tanggal / waktu");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -289,7 +371,7 @@ public status_pesanan(int idPesanan) {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTglCetak)
+                    .addComponent(jLabel10)
                     .addComponent(jLabel9))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -299,7 +381,7 @@ public status_pesanan(int idPesanan) {
                 .addGap(15, 15, 15)
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblTglCetak)
+                .addComponent(jLabel10)
                 .addContainerGap(10, Short.MAX_VALUE))
         );
 
@@ -311,9 +393,6 @@ public status_pesanan(int idPesanan) {
         jLabel12.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
         jLabel12.setText("-");
 
-        lblTglPacking.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
-        lblTglPacking.setText("Tanggal / waktu");
-
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -321,10 +400,7 @@ public status_pesanan(int idPesanan) {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel12)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblTglPacking))
+                    .addComponent(jLabel12)
                     .addComponent(jLabel11))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -334,9 +410,7 @@ public status_pesanan(int idPesanan) {
                 .addGap(17, 17, 17)
                 .addComponent(jLabel11)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel12)
-                    .addComponent(lblTglPacking))
+                .addComponent(jLabel12)
                 .addContainerGap(8, Short.MAX_VALUE))
         );
 
@@ -348,9 +422,6 @@ public status_pesanan(int idPesanan) {
         jLabel14.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
         jLabel14.setText("-");
 
-        lblTglSelesai.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
-        lblTglSelesai.setText("Tanggal / waktu");
-
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
@@ -358,10 +429,7 @@ public status_pesanan(int idPesanan) {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jLabel14)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblTglSelesai))
+                    .addComponent(jLabel14)
                     .addComponent(jLabel13))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -371,71 +439,68 @@ public status_pesanan(int idPesanan) {
                 .addGap(12, 12, 12)
                 .addComponent(jLabel13)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel14)
-                    .addComponent(lblTglSelesai))
+                .addComponent(jLabel14)
                 .addContainerGap(13, Short.MAX_VALUE))
         );
 
-        lblIconBerhasil.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        lblIconBerhasil.setText("●");
+        jLabel15.setText("LOGO");
 
-        lblIconBayar.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        lblIconBayar.setText("●");
+        jLabel16.setText("LOGO");
 
-        lblIconProses.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        lblIconProses.setText("●");
+        jLabel17.setText("LOGO");
 
-        lblIconCetak.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        lblIconCetak.setText("●");
+        jLabel18.setText("LOGO");
 
-        jLabel19.setText(">");
+        jLabel20.setText("LOGO");
 
-        lblIconPacking.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        lblIconPacking.setText("●");
+        jLabel21.setText("LOGO");
 
-        lblIconSelesai.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        lblIconSelesai.setText("●");
+        jButton1.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 14)); // NOI18N
+        jButton1.setText("Lihat Detail Pesanan");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
-        btnLihatDetail.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 14)); // NOI18N
-        btnLihatDetail.setText("Lihat Detail Pesanan");
-        btnLihatDetail.addActionListener(this::btnLihatDetailActionPerformed);
+        jButton2.setBackground(new java.awt.Color(242, 242, 242));
+        jButton2.setText("←");
+        jButton2.addActionListener(this::jButton2ActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addComponent(jLabel19)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(221, 221, 221))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(31, 31, 31)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblIconBerhasil, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblIconBayar, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addGap(18, 18, 18))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(7, 7, 7)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblIconCetak, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblIconProses, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblIconPacking, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblIconSelesai, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addGap(18, 18, 18)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(52, Short.MAX_VALUE))
-            .addComponent(btnLihatDetail, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(42, 42, 42)
+                        .addComponent(jButton2)
+                        .addGap(165, 165, 165)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(30, 30, 30)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel18)
+                                        .addComponent(jLabel17)
+                                        .addComponent(jLabel20)
+                                        .addComponent(jLabel21)
+                                        .addComponent(jLabel16))
+                                    .addGap(20, 20, 20))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addContainerGap()
+                                    .addComponent(jLabel15)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 495, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -443,34 +508,34 @@ public status_pesanan(int idPesanan) {
                 .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jLabel19))
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblIconBerhasil))
-                .addGap(12, 12, 12)
+                    .addComponent(jLabel15))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblIconBayar))
-                .addGap(12, 12, 12)
+                    .addComponent(jLabel16))
+                .addGap(6, 6, 6)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblIconProses))
-                .addGap(12, 12, 12)
+                    .addComponent(jLabel17))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblIconCetak))
-                .addGap(12, 12, 12)
+                    .addComponent(jLabel18)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(6, 6, 6)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblIconPacking))
-                .addGap(12, 12, 12)
+                    .addComponent(jLabel20))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblIconSelesai)
+                    .addComponent(jLabel21)
                     .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnLihatDetail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(12, 12, 12))
+                .addComponent(jButton1)
+                .addContainerGap(11, Short.MAX_VALUE))
         );
 
         pack();
@@ -482,6 +547,22 @@ public status_pesanan(int idPesanan) {
         dp.setVisible(true);
         this.dispose(); // menutup halaman status pesanan
     }//GEN-LAST:event_btnLihatDetailActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+    public void actionPerformed(java.awt.event.ActionEvent evt) {
+        btnLihatDetailActionPerformed(evt);
+    }
+});
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+          checkout h = new checkout();   // atau dashboard_admin, sesuai halaman sebelumnya
+          h.setVisible(true);
+          this.dispose(); // menutup halaman status_pesanan     
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -506,20 +587,32 @@ public status_pesanan(int idPesanan) {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new status_pesanan(1).setVisible(true);
-});
+            new status_pesanan(2).setVisible(true);
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnLihatDetail;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -527,20 +620,5 @@ public status_pesanan(int idPesanan) {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JLabel l;
-    private javax.swing.JLabel lblIconBayar;
-    private javax.swing.JLabel lblIconBerhasil;
-    private javax.swing.JLabel lblIconCetak;
-    private javax.swing.JLabel lblIconPacking;
-    private javax.swing.JLabel lblIconProses;
-    private javax.swing.JLabel lblIconSelesai;
-    private javax.swing.JLabel lblStatusBesar;
-    private javax.swing.JLabel lblTglBayar;
-    private javax.swing.JLabel lblTglBerhasil;
-    private javax.swing.JLabel lblTglCetak;
-    private javax.swing.JLabel lblTglPacking;
-    private javax.swing.JLabel lblTglProses;
-    private javax.swing.JLabel lblTglSelesai;
     // End of variables declaration//GEN-END:variables
 }
