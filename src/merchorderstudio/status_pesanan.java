@@ -24,16 +24,23 @@ public class status_pesanan extends javax.swing.JFrame {
     private final Color WARNA_MATI = new Color(180, 180, 180); // Abu-abu
     
     private static final Logger logger = Logger.getLogger(status_pesanan.class.getName());
+    
+    private int idPesanan;
 
     /**
      * Creates new form status_pesanan
      */
  public status_pesanan(int idPesanan) {
     initComponents();
+    this.idPesanan = idPesanan;
     setLocationRelativeTo(null);
     eksekusiTrackingOtomatis(String.valueOf(idPesanan));
-    
 }
+ 
+ public status_pesanan(){
+     initComponents();
+     setLocationRelativeTo(null);
+ }
  
 private void setLogo(javax.swing.JLabel label, boolean aktif, boolean besar) {
     String aktifPath = "/merchorderstudio/resources/check_active.png";
@@ -543,18 +550,12 @@ private void setLogo(javax.swing.JLabel label, boolean aktif, boolean besar) {
 
     private void btnLihatDetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLihatDetailActionPerformed
         // TODO add your handling code here:
-        detail_pesanan dp = new detail_pesanan();
-        dp.setVisible(true);
-        this.dispose(); // menutup halaman status pesanan
     }//GEN-LAST:event_btnLihatDetailActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-    public void actionPerformed(java.awt.event.ActionEvent evt) {
-        btnLihatDetailActionPerformed(evt);
-    }
-});
+        new detail_pesanan(idPesanan).setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -586,9 +587,7 @@ private void setLogo(javax.swing.JLabel label, boolean aktif, boolean besar) {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> {
-            new status_pesanan(2).setVisible(true);
-        });
+        java.awt.EventQueue.invokeLater(() -> new status_pesanan().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
