@@ -9,6 +9,7 @@ import config.koneksi;
 import javax.swing.JOptionPane;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -25,6 +26,7 @@ public class detail_pesanan extends javax.swing.JFrame {
         this.idPesanan = idPesanan;
         setLocationRelativeTo(null);
         loadDataDetail(idPesanan);
+        loadItemPesanan(idPesanan);
     }
     
     public detail_pesanan(){
@@ -56,6 +58,42 @@ public class detail_pesanan extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }
+    
+    private void loadItemPesanan(int idPesanan){
+        jPanel6.removeAll();
+        
+        String sql = "SELECT dp.id_detail, p.nama_produk, p.ukuran, p.harga, " 
+                + "p.foto_produk, dp.jumlah, dp.catatan, dp.upload_desain " 
+                + "FROM detail_pesanan dp " 
+                + "INNER JOIN produk p ON dp.id_produk = p.id_produk " 
+                + "WHERE dp.id_pesanan = ?";
+        
+        Connection conn = koneksi.getConnection();
+        
+        try(PreparedStatement pst = conn.prepareStatement(sql)){
+            pst.setInt(1, idPesanan);
+            ResultSet rs = pst.executeQuery();
+            
+            while (rs.next()){
+                itemPesanan item = new itemPesanan();
+                item.setNama(rs.getString("nama_produk"));
+                item.setUkuran(rs.getString("ukuran"));
+                item.setCatatan(rs.getString("catatan"));
+                item.setQty(String.valueOf(rs.getInt("jumlah")));
+                item.setHarga(rs.getString("harga"));
+                byte[] foto = rs.getBytes("foto_produk");
+                item.setFoto(foto);
+                jPanel6.add(item);
+            }
+            
+            jPanel6.revalidate();
+            jPanel6.repaint();
+        } catch (Exception e){
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+
+}
+   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -87,8 +125,14 @@ public class detail_pesanan extends javax.swing.JFrame {
         jLabel25 = new javax.swing.JLabel();
         jLabel34 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jPanel6 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMaximumSize(new java.awt.Dimension(637, 464));
+        setMinimumSize(new java.awt.Dimension(637, 464));
+        setPreferredSize(new java.awt.Dimension(650, 550));
+        setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 102, 0));
@@ -251,6 +295,9 @@ public class detail_pesanan extends javax.swing.JFrame {
             }
         });
 
+        jPanel6.setLayout(new javax.swing.BoxLayout(jPanel6, javax.swing.BoxLayout.Y_AXIS));
+        jScrollPane1.setViewportView(jPanel6);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -263,10 +310,11 @@ public class detail_pesanan extends javax.swing.JFrame {
                         .addContainerGap(19, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel10)
-                                .addComponent(jLabel17))
+                                .addComponent(jLabel17)
+                                .addComponent(jScrollPane1))
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(jLabel6)
@@ -292,7 +340,9 @@ public class detail_pesanan extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel10)
-                .addGap(115, 115, 115)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel17)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -344,5 +394,7 @@ public class detail_pesanan extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }
