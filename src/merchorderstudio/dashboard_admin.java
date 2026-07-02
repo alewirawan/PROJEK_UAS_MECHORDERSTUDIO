@@ -640,37 +640,23 @@ public class dashboard_admin extends javax.swing.JFrame {
 
         ResultSet rs = pst.executeQuery();
 
-        while(rs.next()) {
+       while (rs.next()) {
 
             ImageIcon desainIcon = null;
 
-            String pathDesain =
-            rs.getString("upload_desain");
+            byte[] imageBytes = rs.getBytes("upload_desain");
 
-            if(pathDesain != null &&
-               !pathDesain.trim().isEmpty()){
+            if (imageBytes != null && imageBytes.length > 0) {
 
-                File file =
-                new File(pathDesain);
+                ImageIcon icon = new ImageIcon(imageBytes);
 
-                if(file.exists()){
-
-                    ImageIcon icon =
-                    new ImageIcon(pathDesain);
-
-                    Image img =
-                    icon.getImage()
-                    .getScaledInstance(
+                Image img = icon.getImage().getScaledInstance(
                         70,
                         70,
                         Image.SCALE_SMOOTH
-                    );
+                );
 
-                    desainIcon =
-                    new ImageIcon(img);
-
-                }
-
+                desainIcon = new ImageIcon(img);
             }
 
             model.addRow(new Object[]{
@@ -682,25 +668,24 @@ public class dashboard_admin extends javax.swing.JFrame {
                 rs.getString("catatan"),
                 rs.getString("status_pesanan")
             });
-
         }
 
-        TabelProduksi.setModel(model);
+                TabelProduksi.setModel(model);
 
-        TabelProduksi.setRowHeight(70);
+                TabelProduksi.setRowHeight(70);
 
-        setupTableRenderer();
+                setupTableRenderer();
 
-    } catch(Exception e) {
+            } catch(Exception e) {
 
-        JOptionPane.showMessageDialog(
-            null,
-            e.getMessage()
-        );
+                JOptionPane.showMessageDialog(
+                    null,
+                    e.getMessage()
+                );
 
-        e.printStackTrace();
-    }
-}
+                e.printStackTrace();
+            }
+        }
     
   private void DataPelanggan() {
 
