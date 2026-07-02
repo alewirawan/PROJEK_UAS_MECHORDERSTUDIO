@@ -203,7 +203,7 @@ public class dashboard_home extends javax.swing.JFrame {
                     .addComponent(lblBannerLine2)
                     .addComponent(btnPesanSekarang)
                     .addComponent(lblBannerLine3))
-                .addContainerGap(103, Short.MAX_VALUE))
+                .addContainerGap(104, Short.MAX_VALUE))
         );
         pnlBannerTextLayout.setVerticalGroup(
             pnlBannerTextLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -507,8 +507,11 @@ public class dashboard_home extends javax.swing.JFrame {
 
     private void btnCartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCartActionPerformed
         // TODO add your handling code here:
-        int totalItem = keranjangDAO.getJumlahItem(sessions.idUser);
-        JOptionPane.showMessageDialog(this, "Keranjang: " + totalItem + " item");
+        keranjang k=new keranjang();
+        k.setVisible(true);
+
+        this.dispose();
+
     }//GEN-LAST:event_btnCartActionPerformed
 
     private void btnPesanSekarangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesanSekarangActionPerformed
@@ -536,8 +539,10 @@ public class dashboard_home extends javax.swing.JFrame {
 
     private void btnNavKeranjangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNavKeranjangActionPerformed
         // TODO add your handling code here:
-        JOptionPane.showMessageDialog(this, "Keranjang: " + keranjangDAO.getJumlahItem(sessions.idUser) + " item");
-        // nanti diganti panel/window Keranjang beneran
+        keranjang k=new keranjang();
+        k.setVisible(true);
+
+        this.dispose();
     }//GEN-LAST:event_btnNavKeranjangActionPerformed
     
     private void btnNavAkunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNavAkunActionPerformed
