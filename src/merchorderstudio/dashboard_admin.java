@@ -36,6 +36,8 @@ public class dashboard_admin extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         
+    setResizable(false);
+    
         card = new CardLayout();
     jPanel2.setLayout(card);
 
