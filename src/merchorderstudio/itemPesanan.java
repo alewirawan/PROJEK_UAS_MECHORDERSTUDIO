@@ -53,7 +53,26 @@ public class itemPesanan extends javax.swing.JPanel {
 
         jLabel1.setIcon(new ImageIcon(img));
     }
-
+    
+    public String getNama() {
+        return jLabel2.getText();
+    }   
+    public String getUkuran() {
+        return jLabel3.getText();
+    }
+    public String getCatatan() {
+        return jLabel4.getText();
+    }
+    public String getQty() {
+        return jLabel5.getText();
+    }
+    public String getHarga() {
+        return jLabel6.getText();
+    }
+    
+    
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

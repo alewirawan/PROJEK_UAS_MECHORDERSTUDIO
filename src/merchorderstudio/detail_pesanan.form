@@ -382,6 +382,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="&#x2b07; DOWNLOAD INVOICE&#xa;&#xa;"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jLabel25MouseClicked"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

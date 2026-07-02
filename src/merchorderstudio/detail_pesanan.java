@@ -3,6 +3,21 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package merchorderstudio;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+
+import java.awt.Component;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.FileOutputStream;
+
+import javax.swing.JFileChooser;
 
 import java.sql.Connection;
 import config.koneksi;
@@ -10,6 +25,8 @@ import javax.swing.JOptionPane;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javax.swing.ImageIcon;
+
+
 
 /**
  *
@@ -264,6 +281,11 @@ public class detail_pesanan extends javax.swing.JFrame {
         jLabel25.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 14)); // NOI18N
         jLabel25.setForeground(new java.awt.Color(255, 255, 255));
         jLabel25.setText("⬇ DOWNLOAD INVOICE\n\n");
+        jLabel25.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel25MouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -362,6 +384,134 @@ public class detail_pesanan extends javax.swing.JFrame {
         new status_pesanan(idPesanan).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel6MouseClicked
+
+    private void jLabel25MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel25MouseClicked
+        try{
+
+        JFileChooser chooser = new JFileChooser();
+
+        chooser.setSelectedFile(
+                new File("Invoice_" + jLabel13.getText() + ".pdf"));
+
+        int pilih = chooser.showSaveDialog(this);
+
+        if(pilih != JFileChooser.APPROVE_OPTION){
+            return;
+        }
+
+        File file = chooser.getSelectedFile();
+
+        Document document = new Document();
+
+        PdfWriter.getInstance(document,
+                new FileOutputStream(file));
+
+        document.open();
+
+        Font title =
+                FontFactory.getFont(
+                        FontFactory.HELVETICA_BOLD,
+                        18);
+
+        Font sub =
+                FontFactory.getFont(
+                        FontFactory.HELVETICA,
+                        11);
+
+        Paragraph p = new Paragraph(
+                "MERCHORDER STUDIO\nINVOICE",
+                title);
+
+        p.setAlignment(Element.ALIGN_CENTER);
+
+        document.add(p);
+
+        document.add(new Paragraph(" "));
+
+        document.add(new Paragraph(
+                "No Order : " + jLabel13.getText(),sub));
+
+        document.add(new Paragraph(
+                "Tanggal : " + jLabel19.getText(),sub));
+
+        document.add(new Paragraph(
+                "Metode Pembayaran : "
+                + jLabel26.getText(),sub));
+
+        document.add(new Paragraph(
+                "Status : "
+                + jLabel27.getText(),sub));
+
+        document.add(new Paragraph(" "));
+
+        PdfPTable table = new PdfPTable(5);
+
+        table.setWidthPercentage(100);
+
+        table.setWidths(new float[]{3,2,3,1,2});
+
+        table.addCell(new PdfPCell(new Paragraph("Produk")));
+        table.addCell(new PdfPCell(new Paragraph("Ukuran")));
+        table.addCell(new PdfPCell(new Paragraph("Catatan")));
+        table.addCell(new PdfPCell(new Paragraph("Qty")));
+        table.addCell(new PdfPCell(new Paragraph("Harga")));
+
+        for(Component c : jPanel6.getComponents()){
+
+            if(c instanceof itemPesanan){
+
+                itemPesanan item = (itemPesanan)c;
+
+                table.addCell(item.getNama());
+                table.addCell(item.getUkuran());
+                table.addCell(item.getCatatan());
+                table.addCell(item.getQty());
+                table.addCell(item.getHarga());
+
+            }
+
+        }
+
+        document.add(table);
+
+        document.add(new Paragraph(" "));
+
+        document.add(new Paragraph(
+                "Subtotal : " + jLabel32.getText()));
+
+        document.add(new Paragraph(
+                "Ongkir : " + jLabel33.getText()));
+
+        document.add(new Paragraph(
+                "Total : " + jLabel34.getText()));
+
+        document.add(new Paragraph(" "));
+
+        Paragraph thanks =
+                new Paragraph(
+                        "Terima kasih telah berbelanja di MerchOrder Studio.");
+
+        thanks.setAlignment(Element.ALIGN_CENTER);
+
+        document.add(thanks);
+
+        document.close();
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Invoice berhasil disimpan.");
+
+        Desktop.getDesktop().open(file);
+
+    }
+
+    catch(Exception e){
+
+        JOptionPane.showMessageDialog(
+                this,
+                e.getMessage());
+    }
+    }//GEN-LAST:event_jLabel25MouseClicked
 
     /**
      * @param args the command line arguments
