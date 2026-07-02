@@ -21,7 +21,12 @@ public class detail_produk extends javax.swing.JDialog {
      */
     private int idProduk;
     private String ukuranTerpilih = "";
- 
+
+    // --- Palet warna brand (samain sama warna orange di loginForm: FF6B00) ---
+    private static final Color ORANGE = new Color(255, 107, 0);
+    private static final Color ABU_SECTION = new Color(245, 245, 245);
+    private static final Color ABU_BORDER = new Color(220, 220, 220);
+    private static final Color HITAM = new Color(30, 30, 30);
     // Constructor bawaan Netbeans (biarin aja buat jaga-jaga)
     public detail_produk() {
         initComponents();
@@ -31,6 +36,7 @@ public class detail_produk extends javax.swing.JDialog {
     public detail_produk(java.awt.Frame parent, boolean modal, int idProduk) {
         super(parent, modal);
         initComponents();
+        terapkanStyling();
         this.idProduk = idProduk;
         loadDataProduk();
  
@@ -52,10 +58,14 @@ public class detail_produk extends javax.swing.JDialog {
             if (rs.next()) {
                 // 1. Set Nama
                 lblNama.setText(rs.getString("nama_produk"));
-                
+                lblNama.setFont(new Font("Segoe UI", Font.BOLD, 18));
+                lblNama.setForeground(HITAM);
+
                 // 2. Set Harga (Format biar rapi)
                 double harga = rs.getDouble("harga");
-                pnlHarga.setText(String.format("Rp %,.0f", harga)); 
+                pnlHarga.setText(String.format("Rp %,.0f", harga));
+                pnlHarga.setFont(new Font("Segoe UI", Font.BOLD, 16));
+                pnlHarga.setForeground(ORANGE);
  
                 // 3. Set Gambar (Perbaikan ngambil kolom foto_produk bertipe BLOB)
                 byte[] imgBytes = rs.getBytes("foto_produk");
@@ -136,6 +146,27 @@ public class detail_produk extends javax.swing.JDialog {
         });
     }
 
+    // Styling section-section statis biar mirip mockup (background, font judul)
+    private void terapkanStyling() {
+        pnlDetailContent.setBackground(Color.WHITE);
+        jPanel1.setBackground(Color.WHITE);
+        pnlUkuranSection.setBackground(ABU_SECTION);
+        pnlJumlahSection.setBackground(ABU_SECTION);
+        pnlUploadSection.setBackground(ABU_SECTION);
+
+        lblUkuranTitle.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lblJumlahTitle.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lblUploadTitle.setFont(new Font("Segoe UI", Font.BOLD, 13));
+
+        btnTambahKeranjang.setBackground(ORANGE);
+        btnTambahKeranjang.setForeground(Color.WHITE);
+        btnTambahKeranjang.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnTambahKeranjang.setFocusPainted(false);
+        btnTambahKeranjang.setOpaque(true);
+        btnTambahKeranjang.setContentAreaFilled(true);
+        btnTambahKeranjang.setBorderPainted(false);
+        btnTambahKeranjang.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -176,7 +207,6 @@ public class detail_produk extends javax.swing.JDialog {
 
         lblGambar.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblGambar.setText("Gambar Produk");
-        lblGambar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         lblGambar.setPreferredSize(new java.awt.Dimension(360, 300));
 
         lblNama.setText("Nama Produk");
@@ -333,13 +363,16 @@ public class detail_produk extends javax.swing.JDialog {
                     .addGroup(pnlDetailContentLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(pnlDetailContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lblGambar, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(pnlUkuranSection, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(pnlJumlahSection, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(pnlUploadSection, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnTambahKeranjang, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
+            .addGroup(pnlDetailContentLayout.createSequentialGroup()
+                .addGap(35, 35, 35)
+                .addComponent(lblGambar, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlDetailContentLayout.setVerticalGroup(
             pnlDetailContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -349,8 +382,8 @@ public class detail_produk extends javax.swing.JDialog {
                     .addComponent(btnBack)
                     .addComponent(lblCart, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblGambar, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblGambar, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(45, 45, 45)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlUkuranSection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -375,7 +408,7 @@ public class detail_produk extends javax.swing.JDialog {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(27, Short.MAX_VALUE)
                 .addComponent(pnlDetailContent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );

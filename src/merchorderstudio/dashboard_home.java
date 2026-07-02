@@ -651,10 +651,10 @@ public class dashboard_home extends javax.swing.JFrame {
         JPanel hargaCart = new JPanel(new BorderLayout());
         JLabel lblHarga = new JLabel(p.getHargaFormatted());
         lblHarga.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        lblHarga.setForeground(new Color(0, 153, 0));
+        lblHarga.setForeground(new Color(255, 107, 0));
         hargaCart.add(lblHarga, BorderLayout.WEST);
  
-        JButton btnCartKartu = new JButton("\uD83D\uDED2"); // 🛒
+        JButton btnCartKartu = new JButton("\uD83D\uDED2"); 
         btnCartKartu.setBorderPainted(false);
         btnCartKartu.setContentAreaFilled(false);
         btnCartKartu.addActionListener(e -> {
