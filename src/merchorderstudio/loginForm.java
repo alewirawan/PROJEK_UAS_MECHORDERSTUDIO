@@ -220,7 +220,6 @@ public class loginForm extends javax.swing.JFrame {
                 sessions.nama = rs.getString("nama");
                 sessions.email = rs.getString("email");
                 sessions.role = rs.getString("role");
-                JOptionPane.showMessageDialog(this, "Login Berhasil");
                 
                 if(sessions.role.equals("admin")){
                     new dashboard_admin().setVisible(true);
