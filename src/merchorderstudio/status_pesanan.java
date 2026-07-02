@@ -467,6 +467,7 @@ private void setLogo(javax.swing.JLabel label, boolean aktif, boolean besar) {
         jButton1.addActionListener(this::jButton1ActionPerformed);
 
         jButton2.setBackground(new java.awt.Color(242, 242, 242));
+        jButton2.setForeground(new java.awt.Color(255, 102, 0));
         jButton2.setText("←");
         jButton2.addActionListener(this::jButton2ActionPerformed);
 
@@ -479,7 +480,7 @@ private void setLogo(javax.swing.JLabel label, boolean aktif, boolean besar) {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(42, 42, 42)
                         .addComponent(jButton2)
-                        .addGap(165, 165, 165)
+                        .addGap(136, 136, 136)
                         .addComponent(jLabel1))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
@@ -560,7 +561,7 @@ private void setLogo(javax.swing.JLabel label, boolean aktif, boolean besar) {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-          checkout h = new checkout();   // atau dashboard_admin, sesuai halaman sebelumnya
+          dashboard_home h = new dashboard_home();   // atau dashboard_admin, sesuai halaman sebelumnya
           h.setVisible(true);
           this.dispose(); // menutup halaman status_pesanan     
     }//GEN-LAST:event_jButton2ActionPerformed
