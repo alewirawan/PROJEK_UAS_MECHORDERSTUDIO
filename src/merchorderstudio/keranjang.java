@@ -381,15 +381,13 @@ public class keranjang extends javax.swing.JFrame {
     }
 }
     
-    public void DataKeranjang(){
+    public void DataKeranjang() {
 
     panelkeranjang.removeAll();
 
-    try{
+    try {
 
-        int idUser = 4; // user rajaardika@gmail.com
-
-        String sql=
+        String sql =
         "SELECT k.id_keranjang,p.id_produk,p.nama_produk," +
         "k.ukuran,k.jumlah,p.harga,p.foto_produk " +
         "FROM keranjang k " +
@@ -397,17 +395,15 @@ public class keranjang extends javax.swing.JFrame {
         "WHERE k.id_user=? " +
         "ORDER BY k.tanggal_tambah DESC";
 
-        Connection conn=koneksi.getConnection();
+        Connection conn = koneksi.getConnection();
 
-        PreparedStatement pst=conn.prepareStatement(sql);
-        pst.setInt(1,idUser);
+        PreparedStatement pst = conn.prepareStatement(sql);
+        pst.setInt(1, sessions.idUser);   // Menggunakan ID user yang sedang login
 
-        ResultSet rs=pst.executeQuery();
+        ResultSet rs = pst.executeQuery();
 
-        while(rs.next()){
-
+        while (rs.next()) {
             panelkeranjang.add(CreatePanelItem(rs));
-
         }
 
         panelkeranjang.revalidate();
@@ -416,12 +412,9 @@ public class keranjang extends javax.swing.JFrame {
         UpdateCheckAll();
         LoadTotal();
 
-    }catch(Exception e){
-
-        JOptionPane.showMessageDialog(null,e.getMessage());
-
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, e.getMessage());
     }
-
 }
     
     private JPanel CreatePanelItem(ResultSet rs){
