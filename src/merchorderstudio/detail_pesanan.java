@@ -51,10 +51,10 @@ public class detail_pesanan extends javax.swing.JFrame {
     }
 
     public void loadDataDetail(int idPesanan){
-        String sql = "SELECT p.id_pesanan, p.tanggal_pesan, p.status_pesanan, b.metode_bayar " 
-                + "FROM pesanan p " 
-                + "LEFT JOIN pembayaran b ON p.id_pesanan = b.id_pesanan " 
-                + "WHERE p.id_pesanan = ?";
+        String sql = "SELECT p.id_pesanan, p.tanggal_pesan, p.status_pesanan, p.total_harga, b.metode_bayar " 
+            + "FROM pesanan p " 
+            + "LEFT JOIN pembayaran b ON p.id_pesanan = b.id_pesanan " 
+            + "WHERE p.id_pesanan = ?";
         
         Connection conn = koneksi.getConnection();
         
@@ -68,6 +68,9 @@ public class detail_pesanan extends javax.swing.JFrame {
                 jLabel19.setText(String.valueOf(rs.getDate("tanggal_pesan")));
                 jLabel26.setText(rs.getString("metode_bayar"));
                 jLabel27.setText(rs.getString("status_pesanan"));
+                jLabel32.setText("Rp. " + java.text.NumberFormat.getInstance(new java.util.Locale("in", "ID")).format(rs.getDouble("total_harga") - 15000));
+                jLabel33.setText("Rp. 15.000");
+                jLabel34.setText("Rp. " + java.text.NumberFormat.getInstance(new java.util.Locale("in", "ID")).format(rs.getDouble("total_harga")));
             } else {
                 JOptionPane.showMessageDialog(this, "Tidak Ada Pesanan");
             }
@@ -97,7 +100,7 @@ public class detail_pesanan extends javax.swing.JFrame {
                 item.setUkuran(rs.getString("ukuran"));
                 item.setCatatan(rs.getString("catatan"));
                 item.setQty(String.valueOf(rs.getInt("jumlah")));
-                item.setHarga(rs.getString("harga"));
+                item.setHarga(rs.getDouble("harga"));
                 byte[] foto = rs.getBytes("foto_produk");
                 item.setFoto(foto);
                 jPanel6.add(item);
@@ -146,9 +149,9 @@ public class detail_pesanan extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(637, 464));
-        setMinimumSize(new java.awt.Dimension(637, 464));
-        setPreferredSize(new java.awt.Dimension(650, 550));
+        setMaximumSize(new java.awt.Dimension(655, 550));
+        setMinimumSize(new java.awt.Dimension(655, 550));
+        setPreferredSize(new java.awt.Dimension(655, 550));
         setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 18)); // NOI18N
@@ -224,7 +227,7 @@ public class detail_pesanan extends javax.swing.JFrame {
 
         jLabel10.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 14)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(255, 102, 0));
-        jLabel10.setText("Detail Pesanan");
+        jLabel10.setText("Produk");
 
         jLabel17.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 14)); // NOI18N
         jLabel17.setForeground(new java.awt.Color(255, 102, 0));
@@ -291,10 +294,10 @@ public class detail_pesanan extends javax.swing.JFrame {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(213, 213, 213)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap(235, Short.MAX_VALUE)
                 .addComponent(jLabel25)
-                .addContainerGap(224, Short.MAX_VALUE))
+                .addGap(223, 223, 223))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -310,9 +313,15 @@ public class detail_pesanan extends javax.swing.JFrame {
         jPanel6.setLayout(new javax.swing.BoxLayout(jPanel6, javax.swing.BoxLayout.Y_AXIS));
         jScrollPane1.setViewportView(jPanel6);
 
+        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 102, 0));
         jButton1.setText("←");
         jButton1.setToolTipText("");
+        jButton1.setBorder(null);
+        jButton1.setBorderPainted(false);
+        jButton1.setContentAreaFilled(false);
+        jButton1.setFocusPainted(false);
+        jButton1.setRequestFocusEnabled(false);
         jButton1.addActionListener(this::jButton1ActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -320,25 +329,22 @@ public class detail_pesanan extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(24, 24, 24)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(19, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel10)
-                                .addComponent(jLabel17)
-                                .addComponent(jScrollPane1))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jButton1)
-                                    .addGap(174, 174, 174)
-                                    .addComponent(jLabel1))
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel17)
+                            .addComponent(jScrollPane1))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(214, 214, 214)
+                                .addComponent(jLabel1))
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(39, 39, 39)
                 .addComponent(jLabel23)
@@ -349,13 +355,10 @@ public class detail_pesanan extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(jLabel1))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButton1)))
+                .addGap(25, 25, 25)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)

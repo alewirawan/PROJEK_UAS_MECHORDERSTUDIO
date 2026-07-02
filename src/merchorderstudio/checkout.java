@@ -199,7 +199,7 @@ public class checkout extends javax.swing.JFrame {
         jRadioButton1.addActionListener(this::jRadioButton1ActionPerformed);
 
         jRadioButton2.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
-        jRadioButton2.setText("E-Wallet (OVO/Dana/Gopay");
+        jRadioButton2.setText("E-Wallet (OVO/Dana/Gopay)");
         jRadioButton2.addActionListener(this::jRadioButton2ActionPerformed);
 
         jRadioButton3.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
@@ -271,7 +271,7 @@ public class checkout extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 596, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 12, Short.MAX_VALUE))))
+                        .addGap(0, 8, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

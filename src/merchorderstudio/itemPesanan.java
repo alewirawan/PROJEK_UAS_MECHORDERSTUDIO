@@ -7,6 +7,7 @@ package merchorderstudio;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.util.Locale;
 import javax.swing.ImageIcon;
 
 /**
@@ -34,8 +35,8 @@ public class itemPesanan extends javax.swing.JPanel {
     public void setQty(String qty){
         jLabel5.setText("Qty : " + qty);
     }
-    public void setHarga(String harga){
-        jLabel6.setText("Rp %,.0f" + harga);
+    public void setHarga(double harga){
+        jLabel6.setText("Rp. " + java.text.NumberFormat.getInstance(new java.util.Locale("in", "ID")).format(harga));
     }
     public void setFoto(byte[] foto){
 
