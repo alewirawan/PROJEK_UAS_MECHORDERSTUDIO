@@ -140,7 +140,7 @@ public class dashboard_home extends javax.swing.JFrame {
                 .addGap(61, 61, 61)
                 .addComponent(lblAppTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addComponent(pnlTopRight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(24, 24, 24))
@@ -534,7 +534,7 @@ public class dashboard_home extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Keranjang: " + keranjangDAO.getJumlahItem(sessions.idUser) + " item");
         // nanti diganti panel/window Keranjang beneran
     }//GEN-LAST:event_btnNavKeranjangActionPerformed
-
+    
     private void btnNavAkunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNavAkunActionPerformed
         // TODO add your handling code here:
         JOptionPane.showMessageDialog(this, "Halaman Akun belum dibuat");

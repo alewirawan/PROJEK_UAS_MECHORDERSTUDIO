@@ -24,10 +24,15 @@ public class ProdukDAO {
         List<produk> list = new ArrayList<>();
         boolean semua = (kategori == null || kategori.equalsIgnoreCase("Semua"));
  
-        String sql = "SELECT id_produk, nama_produk, kategori, harga, stok, ukuran, deskripsi, foto_produk "
-                + "FROM produk "
+        String sql = "SELECT p.id_produk, p.nama_produk, p.kategori, p.harga, p.stok, p.ukuran, p.deskripsi, p.foto_produk "
+                + "FROM produk p "
+                + "INNER JOIN ( "
+                + "    SELECT nama_produk, MIN(id_produk) AS id_produk "
+                + "    FROM produk "
                 + (semua ? "" : "WHERE kategori = ? ")
-                + "ORDER BY id_produk DESC"
+                + "    GROUP BY nama_produk "
+                + ") grp ON p.nama_produk = grp.nama_produk AND p.id_produk = grp.id_produk "
+                + "ORDER BY p.id_produk DESC"
                 + (limit > 0 ? " LIMIT " + limit : "");
  
         try (Connection conn = koneksi.getConnection();
