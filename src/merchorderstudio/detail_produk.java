@@ -50,63 +50,74 @@ public class detail_produk extends javax.swing.JDialog {
     private void loadDataProduk() {
         try {
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/db_merchorderstudio", "root", "");
-            String sql = "SELECT * FROM produk WHERE id_produk = ?";
-            PreparedStatement pst = conn.prepareStatement(sql);
-            pst.setInt(1, this.idProduk);
-            ResultSet rs = pst.executeQuery();
- 
-            if (rs.next()) {
-                // 1. Set Nama
-                lblNama.setText(rs.getString("nama_produk"));
+
+            // 1. Ambil data produk yang diklik, buat tau nama_produk-nya
+            String sqlUtama = "SELECT * FROM produk WHERE id_produk = ?";
+            PreparedStatement pstUtama = conn.prepareStatement(sqlUtama);
+            pstUtama.setInt(1, this.idProduk);
+            ResultSet rsUtama = pstUtama.executeQuery();
+
+            if (rsUtama.next()) {
+                String namaProduk = rsUtama.getString("nama_produk");
+
+                lblNama.setText(namaProduk);
                 lblNama.setFont(new Font("Segoe UI", Font.BOLD, 18));
                 lblNama.setForeground(HITAM);
 
-                // 2. Set Harga (Format biar rapi)
-                double harga = rs.getDouble("harga");
-                pnlHarga.setText(String.format("Rp %,.0f", harga));
+                // Harga awal (fallback kalau ternyata cuma ada 1 varian)
+                pnlHarga.setText(String.format("Rp %,.0f", rsUtama.getDouble("harga")));
                 pnlHarga.setFont(new Font("Segoe UI", Font.BOLD, 16));
                 pnlHarga.setForeground(ORANGE);
- 
-                // 3. Set Gambar (Perbaikan ngambil kolom foto_produk bertipe BLOB)
-                byte[] imgBytes = rs.getBytes("foto_produk");
+
+                byte[] imgBytes = rsUtama.getBytes("foto_produk");
                 if (imgBytes != null) {
-                    ImageIcon iconAsli = new ImageIcon(imgBytes);
- 
-                    
-                    int imgWidth = iconAsli.getIconWidth();
-                    int imgHeight = iconAsli.getIconHeight();
- 
-                    double rasio = Math.min((double) 360 / imgWidth, (double) 300 / imgHeight);
-                    int lebarBaru = (int) (imgWidth * rasio);
-                    int tinggiBaru = (int) (imgHeight * rasio);
- 
-                    Image gambarFit = iconAsli.getImage().getScaledInstance(lebarBaru, tinggiBaru, Image.SCALE_SMOOTH);
-                    lblGambar.setIcon(new ImageIcon(gambarFit));
-                    lblGambar.setText(""); // Hilangin teks bawaan
+                    tampilkanGambar(imgBytes);
                 }
- 
-                // 4. Bikin Tombol Ukuran Dinamis
-                pnlUkuranList.removeAll(); 
-                String dataUkuran = rs.getString("ukuran"); 
-                
-                if (dataUkuran != null && !dataUkuran.isEmpty()) {
-                    String[] listUkuran = dataUkuran.split(",");
-                    ButtonGroup grupUkuran = new ButtonGroup();
- 
-                    for (String ukuran : listUkuran) {
-                        JToggleButton btnUkuran = new JToggleButton(ukuran.trim());
-                        btnUkuran.setPreferredSize(new Dimension(60, 35));
-                        btnUkuran.setCursor(new Cursor(Cursor.HAND_CURSOR));
-                        
-                        btnUkuran.addActionListener(e -> {
-                            ukuranTerpilih = e.getActionCommand();
-                        });
- 
-                        grupUkuran.add(btnUkuran); 
-                        pnlUkuranList.add(btnUkuran); 
+
+                // 2. Ambil SEMUA varian ukuran (baris lain dengan nama_produk yang sama)
+                String sqlVarian = "SELECT id_produk, harga, ukuran FROM produk WHERE nama_produk = ? ORDER BY id_produk ASC";
+                PreparedStatement pstVarian = conn.prepareStatement(sqlVarian);
+                pstVarian.setString(1, namaProduk);
+                ResultSet rsVarian = pstVarian.executeQuery();
+
+                pnlUkuranList.removeAll();
+                ButtonGroup grupUkuran = new ButtonGroup();
+                boolean pertama = true;
+
+                while (rsVarian.next()) {
+                    int idVarian = rsVarian.getInt("id_produk");
+                    double hargaVarian = rsVarian.getDouble("harga");
+                    String ukuranVarian = rsVarian.getString("ukuran");
+                    if (ukuranVarian == null || ukuranVarian.isEmpty()) continue;
+
+                    JToggleButton btnUkuran = new JToggleButton(ukuranVarian.trim());
+                    btnUkuran.setPreferredSize(new Dimension(60, 35));
+                    btnUkuran.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+                    // simpen data punya varian ini langsung di tombolnya
+                    btnUkuran.putClientProperty("idProduk", idVarian);
+                    btnUkuran.putClientProperty("harga", hargaVarian);
+
+                    btnUkuran.addActionListener(e -> {
+                        JToggleButton sumber = (JToggleButton) e.getSource();
+                        ukuranTerpilih = e.getActionCommand();
+                        this.idProduk = (int) sumber.getClientProperty("idProduk");
+                        double hargaBaru = (double) sumber.getClientProperty("harga");
+                        pnlHarga.setText(String.format("Rp %,.0f", hargaBaru));
+                    });
+
+                    grupUkuran.add(btnUkuran);
+                    pnlUkuranList.add(btnUkuran);
+
+                    if (pertama) { // auto-pilih ukuran pertama biar konsisten dari awal
+                        btnUkuran.setSelected(true);
+                        ukuranTerpilih = ukuranVarian.trim();
+                        this.idProduk = idVarian;
+                        pnlHarga.setText(String.format("Rp %,.0f", hargaVarian));
+                        pertama = false;
                     }
                 }
-                
+
                 pnlUkuranList.revalidate();
                 pnlUkuranList.repaint();
             }
@@ -114,9 +125,26 @@ public class detail_produk extends javax.swing.JDialog {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Gagal memuat data produk: " + e.getMessage());
         }
-        
-        // Panggil fungsi buat ngaktifin tombol-tombol
-        initTombolAksi(); 
+
+        initTombolAksi();
+    }
+
+    private void tampilkanGambar(byte[] imgBytes) {
+        ImageIcon iconAsli = new ImageIcon(imgBytes);
+        int imgWidth = iconAsli.getIconWidth();
+        int imgHeight = iconAsli.getIconHeight();
+
+        // pakai ukuran ASLI label di layout, bukan angka hardcode
+        int labelWidth = lblGambar.getWidth() > 0 ? lblGambar.getWidth() : 208;
+        int labelHeight = lblGambar.getHeight() > 0 ? lblGambar.getHeight() : 171;
+
+        double rasio = Math.min((double) labelWidth / imgWidth, (double) labelHeight / imgHeight);
+        int lebarBaru = (int) (imgWidth * rasio);
+        int tinggiBaru = (int) (imgHeight * rasio);
+
+        Image gambarFit = iconAsli.getImage().getScaledInstance(lebarBaru, tinggiBaru, Image.SCALE_SMOOTH);
+        lblGambar.setIcon(new ImageIcon(gambarFit));
+        lblGambar.setText("");
     }
  
     // Fungsi buat ngidupin tombol +, -, dan Upload
