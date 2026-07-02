@@ -133,7 +133,7 @@ public class kelolaproduk_admin extends javax.swing.JFrame {
 
         jLabel8.setText("Ukuran");
 
-        cmbUkuran.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "S", "M", "L", "XL" }));
+        cmbUkuran.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pilih Ukuran", "S", "M", "L", "XL", "XXL" }));
 
         jLabel9.setText("Deskripsi");
 
@@ -338,7 +338,13 @@ public class kelolaproduk_admin extends javax.swing.JFrame {
                 pst.setString(2,cmbKategori.getSelectedItem().toString());
                 pst.setDouble(3, harga);
                 pst.setInt(4, stok);
-                pst.setString(5, cmbUkuran.getSelectedItem().toString());    
+               String ukuran = cmbUkuran.getSelectedItem().toString();
+
+                if (ukuran.equals("Pilih Ukuran")) {
+                    pst.setNull(5, java.sql.Types.VARCHAR);
+                } else {
+                    pst.setString(5, ukuran);
+                }    
                 pst.setString(6, Deskripsi.getText());
 
                 // SIMPAN FOTO KE BLOB
@@ -390,7 +396,14 @@ public class kelolaproduk_admin extends javax.swing.JFrame {
                 pst.setString(2,cmbKategori.getSelectedItem().toString());
                 pst.setDouble(3, harga);
                 pst.setInt(4, stok);
-                pst.setString(5, cmbUkuran.getSelectedItem().toString());
+                String ukuran = cmbUkuran.getSelectedItem().toString();
+
+                if (ukuran.equals("Pilih Ukuran")) {
+                    pst.setNull(5, java.sql.Types.VARCHAR);
+                } else {
+                    pst.setString(5, ukuran);
+                }
+                
                 pst.setString(6, Deskripsi.getText());
 
                 int index = 7;

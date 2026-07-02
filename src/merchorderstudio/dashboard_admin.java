@@ -700,7 +700,7 @@ public class dashboard_admin extends javax.swing.JFrame {
     }
 }
     
-   private void DataPelanggan() {
+  private void DataPelanggan() {
 
     DefaultTableModel model = new DefaultTableModel();
 
@@ -715,16 +715,19 @@ public class dashboard_admin extends javax.swing.JFrame {
         String keyword = caripelanggan.getText();
 
         String sql =
-        "SELECT * FROM users " +
-        "WHERE CAST(id_user AS CHAR) LIKE ? " +
-        "OR nama LIKE ? " +
-        "OR email LIKE ? " +
-        "OR no_telp LIKE ?";
+        "SELECT DISTINCT u.id_user, u.nama, u.email, u.no_telp, u.alamat " +
+        "FROM users u " +
+        "INNER JOIN pesanan p ON u.id_user = p.id_user " +
+        "WHERE CAST(u.id_user AS CHAR) LIKE ? " +
+        "OR u.nama LIKE ? " +
+        "OR u.email LIKE ? " +
+        "OR u.no_telp LIKE ?";
 
         Connection conn = koneksi.getConnection();
+
         PreparedStatement pst = conn.prepareStatement(sql);
 
-        for(int i=1; i<=4; i++){
+        for(int i = 1; i <= 4; i++){
             pst.setString(i, "%" + keyword + "%");
         }
 
@@ -743,11 +746,13 @@ public class dashboard_admin extends javax.swing.JFrame {
         }
 
         TabelPelanggan.setModel(model);
-        
+
         TabelPelanggan.setRowHeight(45);
 
     } catch(Exception e) {
+
         JOptionPane.showMessageDialog(null, e.getMessage());
+
     }
 }
    
