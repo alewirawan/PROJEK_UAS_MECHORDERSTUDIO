@@ -7,13 +7,7 @@
     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
       <Color blue="ff" green="ff" red="ff" type="rgb"/>
     </Property>
-    <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[580, 580]"/>
-    </Property>
     <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[580, 580]"/>
-    </Property>
-    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
       <Dimension value="[580, 580]"/>
     </Property>
     <Property name="resizable" type="boolean" value="false"/>
@@ -83,11 +77,11 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btnHamburger" min="-2" pref="46" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="61" max="-2" attributes="0"/>
+                      <EmptySpace pref="38" max="32767" attributes="0"/>
                       <Component id="lblAppTitle" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jLabel1" min="-2" pref="60" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
                       <Component id="pnlTopRight" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
                   </Group>
@@ -268,6 +262,9 @@
                           <SubComponents>
                             <Container class="javax.swing.JPanel" name="pnlBannerText">
                               <Properties>
+                                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                                  <Color blue="e8" green="e8" red="e8" type="rgb"/>
+                                </Property>
                                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                                   <Dimension value="[300, 125]"/>
                                 </Property>
@@ -284,7 +281,7 @@
                                               <Component id="btnPesanSekarang" min="-2" max="-2" attributes="0"/>
                                               <Component id="lblBannerLine3" min="-2" max="-2" attributes="0"/>
                                           </Group>
-                                          <EmptySpace pref="103" max="32767" attributes="0"/>
+                                          <EmptySpace pref="104" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                                 </DimensionLayout>

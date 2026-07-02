@@ -98,9 +98,7 @@ public class dashboard_home extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("MerchOrderStudio");
         setBackground(new java.awt.Color(255, 255, 255));
-        setMaximumSize(new java.awt.Dimension(580, 580));
         setMinimumSize(new java.awt.Dimension(580, 580));
-        setPreferredSize(new java.awt.Dimension(580, 580));
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -142,11 +140,11 @@ public class dashboard_home extends javax.swing.JFrame {
             .addGroup(pnlTopBarLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnHamburger, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(61, 61, 61)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                 .addComponent(lblAppTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(33, 33, 33)
                 .addComponent(pnlTopRight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(24, 24, 24))
         );
@@ -177,6 +175,7 @@ public class dashboard_home extends javax.swing.JFrame {
 
         pnlBanner.setBackground(new java.awt.Color(255, 255, 255));
 
+        pnlBannerText.setBackground(new java.awt.Color(232, 232, 232));
         pnlBannerText.setPreferredSize(new java.awt.Dimension(300, 125));
 
         lblBannerLine1.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
@@ -203,7 +202,7 @@ public class dashboard_home extends javax.swing.JFrame {
                     .addComponent(lblBannerLine2)
                     .addComponent(btnPesanSekarang)
                     .addComponent(lblBannerLine3))
-                .addContainerGap(103, Short.MAX_VALUE))
+                .addContainerGap(104, Short.MAX_VALUE))
         );
         pnlBannerTextLayout.setVerticalGroup(
             pnlBannerTextLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
