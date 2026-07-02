@@ -35,6 +35,7 @@ public class dashboard_home extends javax.swing.JFrame {
      */
     public dashboard_home() {
         initComponents();
+        setLocationRelativeTo(null);
         // ==== TAMBAHAN MULAI ====
         cardLayout = (CardLayout) pnlContent.getLayout();
         tampilkanProduk("Semua", 0);
@@ -97,6 +98,10 @@ public class dashboard_home extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("MerchOrderStudio");
         setBackground(new java.awt.Color(255, 255, 255));
+        setMaximumSize(new java.awt.Dimension(580, 580));
+        setMinimumSize(new java.awt.Dimension(580, 580));
+        setPreferredSize(new java.awt.Dimension(580, 580));
+        setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -198,7 +203,7 @@ public class dashboard_home extends javax.swing.JFrame {
                     .addComponent(lblBannerLine2)
                     .addComponent(btnPesanSekarang)
                     .addComponent(lblBannerLine3))
-                .addContainerGap(104, Short.MAX_VALUE))
+                .addContainerGap(103, Short.MAX_VALUE))
         );
         pnlBannerTextLayout.setVerticalGroup(
             pnlBannerTextLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -221,11 +226,11 @@ public class dashboard_home extends javax.swing.JFrame {
         pnlBannerLayout.setHorizontalGroup(
             pnlBannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlBannerLayout.createSequentialGroup()
-                .addContainerGap(3392, Short.MAX_VALUE)
+                .addContainerGap(3410, Short.MAX_VALUE)
                 .addComponent(pnlBannerText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(67, 67, 67)
                 .addComponent(lblBannerImage, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(74, 74, 74))
+                .addGap(56, 56, 56))
         );
         pnlBannerLayout.setVerticalGroup(
             pnlBannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -367,7 +372,7 @@ public class dashboard_home extends javax.swing.JFrame {
         pnlKategoriSectionLayout.setHorizontalGroup(
             pnlKategoriSectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlKategoriSectionLayout.createSequentialGroup()
-                .addContainerGap(3364, Short.MAX_VALUE)
+                .addContainerGap(3395, Short.MAX_VALUE)
                 .addGroup(pnlKategoriSectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(pnlKategoriHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(pnlKategoriSectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -375,7 +380,7 @@ public class dashboard_home extends javax.swing.JFrame {
                             .addGap(6, 6, 6)
                             .addComponent(pnlProdukHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addComponent(pnlKategoriList, javax.swing.GroupLayout.PREFERRED_SIZE, 530, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(41, 41, 41))
+                .addContainerGap())
         );
         pnlKategoriSectionLayout.setVerticalGroup(
             pnlKategoriSectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
