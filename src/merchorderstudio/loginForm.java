@@ -225,7 +225,7 @@ public class loginForm extends javax.swing.JFrame {
                 if(sessions.role.equals("admin")){
                     new dashboard_admin().setVisible(true);
                 } else {
-                    new home().setVisible(true);
+                    new dashboard_home().setVisible(true);
                 }
                 this.dispose();
             } else {
