@@ -76,15 +76,13 @@ private void setLogo(javax.swing.JLabel label, boolean aktif, boolean besar) {
 
         try (ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
-                int idPesanan = rs.getInt("id_pesanan");
-                jLabel3.setText("No Order : " + idPesanan);
+                this.idPesanan = rs.getInt("id_pesanan");
+                jLabel3.setText("No Order : " + this.idPesanan);
                 
                 String statusDatabase = rs.getString("status_pesanan");
                 Date tglPesan = rs.getTimestamp("tanggal_pesan");
                 
                 jLabel1.setText("Status Pesanan");
-
-                
                 SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy, HH:mm");
                 
                 int levelStatus = 0;
@@ -129,13 +127,13 @@ private void setLogo(javax.swing.JLabel label, boolean aktif, boolean besar) {
                     cal.add(Calendar.MINUTE, 30);
                     Date waktuEstimasi = cal.getTime();
 
-                    if (waktuSekarangLaptop.after(waktuEstimasi)) {
+                    if (levelStatus >= 3) {
                         jLabel7.setForeground(WARNA_AKTIF);
                         jLabel8.setText(sdf.format(waktuEstimasi)); // tampilkan tanggal
                         isStep3Aktif = true;
                     } else {
                         jLabel7.setForeground(WARNA_MATI);
-                        jLabel8.setText(""); // kosongkan tanggal
+                        jLabel8.setText("-"); // kosongkan tanggal
                     }
                 }
 

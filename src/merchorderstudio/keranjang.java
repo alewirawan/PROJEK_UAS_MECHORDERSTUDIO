@@ -37,6 +37,7 @@ import java.awt.Image;
  *
  * @author Gunawan
  */
+
 public class keranjang extends javax.swing.JFrame {
     
 
@@ -853,4 +854,8 @@ public class keranjang extends javax.swing.JFrame {
     private javax.swing.JLabel lblTotal;
     private javax.swing.JPanel panelkeranjang;
     // End of variables declaration//GEN-END:variables
+}
+
+class CheckoutSession {
+    public static ArrayList<Integer> listKeranjang = new ArrayList<>();
 }
