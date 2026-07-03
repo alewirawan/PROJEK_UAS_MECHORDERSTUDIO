@@ -8,6 +8,7 @@ import checkout.Checkoutsession;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Connection;
+import java.sql.SQLException;
 import config.koneksi;
 import java.awt.Color;
 import java.awt.Component;
@@ -32,6 +33,8 @@ public class checkout extends javax.swing.JFrame {
     /**
      * Creates new form checkout
      */
+    private double totalCheckout = 0;
+    
     public checkout() {
         initComponents();
         setLocationRelativeTo(null);
@@ -102,8 +105,11 @@ public class checkout extends javax.swing.JFrame {
             double ongkir = 15000; // Contoh tarif ongkir statis, atau set 0 jika belum ada logika ongkir
             jLabel17.setText("Rp " + keranjang.FormatRupiah.format(ongkir));
             
-            double totalAkhir = subtotalKeseluruhan + ongkir;
-            jLabel18.setText("Rp " + keranjang.FormatRupiah.format(totalAkhir));
+            totalCheckout = subtotalKeseluruhan + ongkir;
+
+            jLabel16.setText("Rp " + keranjang.FormatRupiah.format(subtotalKeseluruhan));
+            jLabel17.setText("Rp " + keranjang.FormatRupiah.format(ongkir));
+            jLabel18.setText("Rp " + keranjang.FormatRupiah.format(totalCheckout));
             
             panelCheckout.revalidate();
             panelCheckout.repaint();
@@ -118,9 +124,9 @@ public class checkout extends javax.swing.JFrame {
         try {
             panelItem.setBackground(Color.WHITE);
             panelItem.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(220, 220, 220)));
-            panelItem.setPreferredSize(new Dimension(570, 90));
-            panelItem.setMinimumSize(new Dimension(570, 90));
-            panelItem.setMaximumSize(new Dimension(570, 90));
+            panelItem.setPreferredSize(new Dimension(550, 90));
+            panelItem.setMinimumSize(new Dimension(550, 90));
+            panelItem.setMaximumSize(new Dimension(550, 90));
             panelItem.setLayout(null);
             panelItem.setAlignmentX(Component.LEFT_ALIGNMENT);
             
@@ -160,21 +166,21 @@ public class checkout extends javax.swing.JFrame {
             JLabel lblHarga = new JLabel("Harga: Rp " + keranjang.FormatRupiah.format(harga));
             lblHarga.setFont(new Font("Segoe UI", Font.PLAIN, 12));
             lblHarga.setHorizontalAlignment(JLabel.RIGHT);
-            lblHarga.setBounds(420, 15, 200, 18);
+            lblHarga.setBounds(350, 10, 150, 20);
             panelItem.add(lblHarga);
 
             int jumlah = rs.getInt("jumlah");
             JLabel lblJumlah = new JLabel("Jumlah Pembelian: " + jumlah);
             lblJumlah.setFont(new Font("Segoe UI", Font.PLAIN, 12));
             lblJumlah.setHorizontalAlignment(JLabel.RIGHT);
-            lblJumlah.setBounds(420, 38, 200, 18);
+            lblJumlah.setBounds(350, 35, 150, 20);
             panelItem.add(lblJumlah);
 
             JLabel lblSub = new JLabel("Subtotal: Rp " + keranjang.FormatRupiah.format(subtotalItem));
             lblSub.setFont(new Font("Segoe UI", Font.BOLD, 13));
             lblSub.setForeground(new Color(255, 102, 0));
             lblSub.setHorizontalAlignment(JLabel.RIGHT);
-            lblSub.setBounds(420, 65, 200, 20);
+            lblSub.setBounds(350, 60, 150, 20);
             panelItem.add(lblSub);
         } catch (Exception e) {
             e.printStackTrace();
@@ -381,10 +387,10 @@ public class checkout extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING))
                         .addContainerGap(14, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -490,6 +496,7 @@ public class checkout extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         String metodePembayaran = "";
+
         if (jRadioButton1.isSelected()) {
             metodePembayaran = "Transfer Bank";
         } else if (jRadioButton2.isSelected()) {
@@ -497,95 +504,121 @@ public class checkout extends javax.swing.JFrame {
         } else if (jRadioButton3.isSelected()) {
             metodePembayaran = "COD";
         } else {
-            JOptionPane.showMessageDialog(this, "Pilih Metode Pembayaran!");
+            JOptionPane.showMessageDialog(this, "Silakan pilih metode pembayaran!");
             return;
         }
-    
-        int idUser = sessions.idUser;
+        
         String alamat = jTextField3.getText().trim();
-    
-        if (alamat.isEmpty() || alamat.equals("Alamat")) {
+
+        if (alamat.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Alamat pengiriman tidak boleh kosong!");
             return;
         }
-    
-        double totalHarga = 0;
-        try {
-            String cleanTotal = jLabel18.getText()
-                    .replace("Rp", "")
-                    .replace(".", "")
-                    .replace(",", ".")
-                    .trim();
-            totalHarga = Double.parseDouble(cleanTotal);
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Gagal memproses total harga");
+        
+        if (Checkoutsession.listKeranjang.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Tidak ada produk yang dipilih!");
             return;
         }
-    
-        String statusAwal = "Pending";
+        
         Connection conn = koneksi.getConnection();
         
         try {
             conn.setAutoCommit(false);
-        
-            String queryPesanan = "INSERT INTO pesanan (id_user, alamat, total_harga, metode_pembayaran, status_pesanan, tanggal_pesan) VALUES (?, ?, ?, ?, ?, NOW())";
             int idPesananBaru = 0;
-        
-            try (PreparedStatement pstPesanan = conn.prepareStatement(queryPesanan, PreparedStatement.RETURN_GENERATED_KEYS)) {
-                pstPesanan.setInt(1, idUser);
-                pstPesanan.setString(2, alamat);
-                pstPesanan.setDouble(3, totalHarga);
-                pstPesanan.setString(4, metodePembayaran);
-                pstPesanan.setString(5, statusAwal);
             
-                int rowsInserted = pstPesanan.executeUpdate();
+            String sqlPesanan = "INSERT INTO pesanan "
+                    + "(id_user, alamat, total_harga, status_pesanan, tanggal_pesan) "
+                    + "VALUES (?, ?, ?, ?, NOW())";
             
-                if (rowsInserted > 0) {
-                    try (java.sql.ResultSet rsKeys = pstPesanan.getGeneratedKeys()) {
-                        if (rsKeys.next()) {
-                            idPesananBaru = rsKeys.getInt(1);
-                        }
-                    }
+            try (PreparedStatement pst = conn.prepareStatement(sqlPesanan, 
+                    PreparedStatement.RETURN_GENERATED_KEYS)) {
+                pst.setInt(1, sessions.idUser);
+                pst.setString(2, alamat);
+                pst.setDouble(3, totalCheckout);
+                pst.setString(4, "Pending");
+
+                pst.executeUpdate();
+                
+                ResultSet rs = pst.getGeneratedKeys();
+                
+                if (rs.next()) {
+                    idPesananBaru = rs.getInt(1);
                 }
             }
+            
             if (idPesananBaru == 0) {
-                throw new java.sql.SQLException("Gagal membuat data pesanan utama.");
+                throw new SQLException("Pesanan gagal dibuat.");
             }
             
-            String queryPindahkanDetail = "INSERT INTO detail_pesanan (id_pesanan, id_produk, jumlah, ukuran, upload_desain, catatan) "
-                + "SELECT ?, id_produk, jumlah, ukuran, upload_desain, catatan FROM keranjang WHERE id_user = ?";
+            String sqlPembayaran = "INSERT INTO pembayaran "
+                    + "(id_pesanan, metode_bayar, status_bayar, tanggal_bayar) "
+                    + "VALUES (?, ?, ?, NOW())";
             
-            try (PreparedStatement pstDetail = conn.prepareStatement(queryPindahkanDetail)) {
-                pstDetail.setInt(1, idPesananBaru);
-                pstDetail.setInt(2, idUser);
-                pstDetail.executeUpdate();
+            try (PreparedStatement pst = conn.prepareStatement(sqlPembayaran)) {
+                pst.setInt(1, idPesananBaru);
+                pst.setString(2, metodePembayaran);
+                pst.setString(3, "Pending");
+                pst.executeUpdate();
             }
             
-            String queryHapusKeranjang = "DELETE FROM keranjang WHERE id_user = ?";
-            try (PreparedStatement pstHapus = conn.prepareStatement(queryHapusKeranjang)) {
-                pstHapus.setInt(1, idUser);
-                pstHapus.executeUpdate();
+            StringBuilder placeholder = new StringBuilder();
+            
+            for (int i = 0; i < Checkoutsession.listKeranjang.size(); i++) {
+                placeholder.append("?");
+                
+                if (i < Checkoutsession.listKeranjang.size() - 1) {
+                    placeholder.append(",");
+                }
+            }
+            
+            String sqlDetail = "INSERT INTO detail_pesanan "
+                    + "(id_pesanan, id_produk, jumlah, upload_desain, catatan) "
+                    + "SELECT ?, id_produk, jumlah, upload_desain, catatan "
+                    + "FROM keranjang "
+                    + "WHERE id_keranjang IN (" + placeholder + ")";
+            
+            try (PreparedStatement pst = conn.prepareStatement(sqlDetail)) {
+                pst.setInt(1, idPesananBaru);
+                
+                for (int i = 0; i < Checkoutsession.listKeranjang.size(); i++) {
+                    pst.setInt(i + 2, Checkoutsession.listKeranjang.get(i));
+                }
+                pst.executeUpdate();
+            }
+            
+            String sqlDelete = "DELETE FROM keranjang "
+                    + "WHERE id_keranjang IN (" + placeholder + ")";
+            
+            try (PreparedStatement pst = conn.prepareStatement(sqlDelete)) {
+                for (int i = 0; i < Checkoutsession.listKeranjang.size(); i++) {
+                    pst.setInt(i + 1, Checkoutsession.listKeranjang.get(i));
+                }
+                
+                pst.executeUpdate();
             }
             
             conn.commit();
-            
-            JOptionPane.showMessageDialog(this, "Pesanan Anda telah dibuat");
+            Checkoutsession.listKeranjang.clear();
+            JOptionPane.showMessageDialog(this, "Pesanan berhasil dibuat.");
             
             new status_pesanan(idPesananBaru).setVisible(true);
             this.dispose();
-        } catch (java.sql.SQLException e) {
+        } catch (Exception e) {
             try {
-                if (conn != null) conn.rollback();
-            } catch (java.sql.SQLException ex) {
-                java.util.logging.Logger.getLogger(this.getClass().getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                if (conn != null) {
+                    conn.rollback();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
             }
-            JOptionPane.showMessageDialog(this, "Terjadi kesalahan database: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            java.util.logging.Logger.getLogger(this.getClass().getName()).log(java.util.logging.Level.SEVERE, null, e);
+            JOptionPane.showMessageDialog(this, e.getMessage());
         } finally {
             try {
-                if (conn != null) conn.setAutoCommit(true);
-            } catch (java.sql.SQLException ex) {
-                java.util.logging.Logger.getLogger(this.getClass().getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                if (conn != null) {
+                    conn.setAutoCommit(true);
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
             }
         }
     }//GEN-LAST:event_jButton2ActionPerformed
