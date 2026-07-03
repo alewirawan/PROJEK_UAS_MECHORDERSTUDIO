@@ -557,7 +557,11 @@ public class checkout extends javax.swing.JFrame {
             try (PreparedStatement pst = conn.prepareStatement(sqlPembayaran)) {
                 pst.setInt(1, idPesananBaru);
                 pst.setString(2, metodePembayaran);
-                pst.setString(3, "Pending");
+                if(jRadioButton1.isSelected() || jRadioButton2.isSelected()){
+                    pst.setString(3, "lunas");
+                } else {
+                    pst.setString(3, "Pending");
+                }
                 pst.executeUpdate();
             }
             
