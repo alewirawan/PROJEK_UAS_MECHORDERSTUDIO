@@ -560,7 +560,7 @@ public class checkout extends javax.swing.JFrame {
                 if(jRadioButton1.isSelected() || jRadioButton2.isSelected()){
                     pst.setString(3, "lunas");
                 } else {
-                    pst.setString(3, "Pending");
+                    pst.setString(3, "pending");
                 }
                 pst.executeUpdate();
             }
