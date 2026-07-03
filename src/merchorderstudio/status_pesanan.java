@@ -554,7 +554,7 @@ private void setLogo(javax.swing.JLabel label, boolean aktif, boolean besar) {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new status_pesanan(6).setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new status_pesanan().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
