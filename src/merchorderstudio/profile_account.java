@@ -28,21 +28,311 @@ public class profile_account extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        pnlSidebar = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        lblBrandNama = new javax.swing.JLabel();
+        lblBrandStudio = new javax.swing.JLabel();
+        lblBrandTagline = new javax.swing.JLabel();
+        pnlSidebarInfo = new javax.swing.JPanel();
+        lblSidebarTitle = new javax.swing.JLabel();
+        lblSidebarDesc1 = new javax.swing.JLabel();
+        lblSidebarDesc2 = new javax.swing.JLabel();
+        lblAvatarIcon = new javax.swing.JLabel();
+        pnlFormContainer = new javax.swing.JPanel();
+        pnlFormHeader = new javax.swing.JPanel();
+        lblFormIcon = new javax.swing.JLabel();
+        pnlFormTitleGroup = new javax.swing.JPanel();
+        lblFormTitle = new javax.swing.JLabel();
+        lblFormSubtitle = new javax.swing.JLabel();
+        pnlFormFields = new javax.swing.JPanel();
+        lblNama = new javax.swing.JLabel();
+        lblAlamat = new javax.swing.JLabel();
+        lblNoTelp = new javax.swing.JLabel();
+        lblEmail = new javax.swing.JLabel();
+        lblPassword = new javax.swing.JLabel();
+        txtNama = new javax.swing.JTextField();
+        txtAlamat = new javax.swing.JTextField();
+        txtNoTelp = new javax.swing.JTextField();
+        txtEmail = new javax.swing.JTextField();
+        JPasswordField = new javax.swing.JPasswordField();
+        btnSimpanPerubahan = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        pnlSidebar.setBackground(new java.awt.Color(0, 15, 5));
+
+        jPanel3.setBackground(new java.awt.Color(0, 15, 5));
+
+        lblBrandNama.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblBrandNama.setForeground(new java.awt.Color(255, 255, 255));
+        lblBrandNama.setText("MerchOrder");
+
+        lblBrandStudio.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblBrandStudio.setForeground(new java.awt.Color(255, 104, 0));
+        lblBrandStudio.setText("Studio");
+
+        lblBrandTagline.setForeground(new java.awt.Color(255, 255, 255));
+        lblBrandTagline.setText("Custom Merchandise");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblBrandNama)
+                    .addComponent(lblBrandStudio)
+                    .addComponent(lblBrandTagline))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap(13, Short.MAX_VALUE)
+                .addComponent(lblBrandNama)
+                .addGap(2, 2, 2)
+                .addComponent(lblBrandStudio)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblBrandTagline)
+                .addContainerGap())
+        );
+
+        pnlSidebarInfo.setBackground(new java.awt.Color(0, 15, 5));
+
+        lblSidebarTitle.setBackground(new java.awt.Color(255, 255, 255));
+        lblSidebarTitle.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblSidebarTitle.setForeground(new java.awt.Color(255, 104, 0));
+        lblSidebarTitle.setText("Profile");
+
+        lblSidebarDesc1.setForeground(new java.awt.Color(255, 255, 255));
+        lblSidebarDesc1.setText("Kelola informasi akun");
+
+        lblSidebarDesc2.setForeground(new java.awt.Color(255, 255, 255));
+        lblSidebarDesc2.setText("dan detail kontak Anda");
+
+        javax.swing.GroupLayout pnlSidebarInfoLayout = new javax.swing.GroupLayout(pnlSidebarInfo);
+        pnlSidebarInfo.setLayout(pnlSidebarInfoLayout);
+        pnlSidebarInfoLayout.setHorizontalGroup(
+            pnlSidebarInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlSidebarInfoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlSidebarInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblSidebarTitle)
+                    .addComponent(lblSidebarDesc1)
+                    .addComponent(lblSidebarDesc2))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        pnlSidebarInfoLayout.setVerticalGroup(
+            pnlSidebarInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSidebarInfoLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblSidebarTitle)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblSidebarDesc1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblSidebarDesc2)
+                .addContainerGap())
+        );
+
+        lblAvatarIcon.setForeground(new java.awt.Color(255, 255, 255));
+        lblAvatarIcon.setText("lblAvatarIcon");
+
+        javax.swing.GroupLayout pnlSidebarLayout = new javax.swing.GroupLayout(pnlSidebar);
+        pnlSidebar.setLayout(pnlSidebarLayout);
+        pnlSidebarLayout.setHorizontalGroup(
+            pnlSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlSidebarLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlSidebarInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblAvatarIcon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(56, Short.MAX_VALUE))
+        );
+        pnlSidebarLayout.setVerticalGroup(
+            pnlSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlSidebarLayout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(37, 37, 37)
+                .addComponent(lblAvatarIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(pnlSidebarInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        pnlFormContainer.setBackground(new java.awt.Color(255, 255, 255));
+
+        pnlFormHeader.setBackground(new java.awt.Color(255, 255, 255));
+
+        lblFormIcon.setText("Profile");
+
+        pnlFormTitleGroup.setBackground(new java.awt.Color(255, 255, 255));
+
+        lblFormTitle.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblFormTitle.setText("Profile");
+
+        lblFormSubtitle.setText("Kelola informasi akun Anda");
+
+        javax.swing.GroupLayout pnlFormTitleGroupLayout = new javax.swing.GroupLayout(pnlFormTitleGroup);
+        pnlFormTitleGroup.setLayout(pnlFormTitleGroupLayout);
+        pnlFormTitleGroupLayout.setHorizontalGroup(
+            pnlFormTitleGroupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlFormTitleGroupLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlFormTitleGroupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblFormTitle)
+                    .addComponent(lblFormSubtitle))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        pnlFormTitleGroupLayout.setVerticalGroup(
+            pnlFormTitleGroupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlFormTitleGroupLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblFormTitle)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblFormSubtitle)
+                .addGap(16, 16, 16))
+        );
+
+        javax.swing.GroupLayout pnlFormHeaderLayout = new javax.swing.GroupLayout(pnlFormHeader);
+        pnlFormHeader.setLayout(pnlFormHeaderLayout);
+        pnlFormHeaderLayout.setHorizontalGroup(
+            pnlFormHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlFormHeaderLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblFormIcon)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(pnlFormTitleGroup, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        pnlFormHeaderLayout.setVerticalGroup(
+            pnlFormHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlFormHeaderLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlFormHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblFormIcon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(pnlFormHeaderLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(pnlFormTitleGroup, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(60, 60, 60))
+        );
+
+        pnlFormFields.setBackground(new java.awt.Color(255, 255, 255));
+
+        lblNama.setText("Nama");
+
+        lblAlamat.setText("Alamat");
+
+        lblNoTelp.setText("No Telp");
+
+        lblEmail.setText("E-Mail");
+
+        lblPassword.setText("Password");
+
+        JPasswordField.setText("jPasswordField1");
+
+        btnSimpanPerubahan.setText("Simpan Perubahan");
+        btnSimpanPerubahan.addActionListener(this::btnSimpanPerubahanActionPerformed);
+
+        javax.swing.GroupLayout pnlFormFieldsLayout = new javax.swing.GroupLayout(pnlFormFields);
+        pnlFormFields.setLayout(pnlFormFieldsLayout);
+        pnlFormFieldsLayout.setHorizontalGroup(
+            pnlFormFieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlFormFieldsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlFormFieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtNama)
+                    .addComponent(txtAlamat)
+                    .addComponent(txtNoTelp)
+                    .addComponent(txtEmail)
+                    .addComponent(JPasswordField)
+                    .addGroup(pnlFormFieldsLayout.createSequentialGroup()
+                        .addGroup(pnlFormFieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblNama)
+                            .addComponent(lblAlamat)
+                            .addComponent(lblNoTelp)
+                            .addComponent(lblEmail)
+                            .addComponent(lblPassword)
+                            .addComponent(btnSimpanPerubahan, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        pnlFormFieldsLayout.setVerticalGroup(
+            pnlFormFieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlFormFieldsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblNama)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblAlamat)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtAlamat, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblNoTelp)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtNoTelp, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblEmail)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblPassword)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(JPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnSimpanPerubahan, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout pnlFormContainerLayout = new javax.swing.GroupLayout(pnlFormContainer);
+        pnlFormContainer.setLayout(pnlFormContainerLayout);
+        pnlFormContainerLayout.setHorizontalGroup(
+            pnlFormContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlFormContainerLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlFormContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(pnlFormFields, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlFormHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        pnlFormContainerLayout.setVerticalGroup(
+            pnlFormContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlFormContainerLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(pnlFormHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlFormFields, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(14, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(pnlSidebar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15)
+                .addComponent(pnlFormContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(pnlFormContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(pnlSidebar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSimpanPerubahanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanPerubahanActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSimpanPerubahanActionPerformed
 
     /**
      * @param args the command line arguments
@@ -70,5 +360,33 @@ public class profile_account extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPasswordField JPasswordField;
+    private javax.swing.JButton btnSimpanPerubahan;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JLabel lblAlamat;
+    private javax.swing.JLabel lblAvatarIcon;
+    private javax.swing.JLabel lblBrandNama;
+    private javax.swing.JLabel lblBrandStudio;
+    private javax.swing.JLabel lblBrandTagline;
+    private javax.swing.JLabel lblEmail;
+    private javax.swing.JLabel lblFormIcon;
+    private javax.swing.JLabel lblFormSubtitle;
+    private javax.swing.JLabel lblFormTitle;
+    private javax.swing.JLabel lblNama;
+    private javax.swing.JLabel lblNoTelp;
+    private javax.swing.JLabel lblPassword;
+    private javax.swing.JLabel lblSidebarDesc1;
+    private javax.swing.JLabel lblSidebarDesc2;
+    private javax.swing.JLabel lblSidebarTitle;
+    private javax.swing.JPanel pnlFormContainer;
+    private javax.swing.JPanel pnlFormFields;
+    private javax.swing.JPanel pnlFormHeader;
+    private javax.swing.JPanel pnlFormTitleGroup;
+    private javax.swing.JPanel pnlSidebar;
+    private javax.swing.JPanel pnlSidebarInfo;
+    private javax.swing.JTextField txtAlamat;
+    private javax.swing.JTextField txtEmail;
+    private javax.swing.JTextField txtNama;
+    private javax.swing.JTextField txtNoTelp;
     // End of variables declaration//GEN-END:variables
 }
