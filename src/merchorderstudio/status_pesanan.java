@@ -63,8 +63,12 @@ private void setLogo(javax.swing.JLabel label, boolean aktif, boolean besar) {
 }
 
     private void eksekusiTrackingOtomatis(String idPesananAtauNoOrder) {
-    String sql = "SELECT id_pesanan, status_pesanan, tanggal_pesan, total_harga FROM pesanan WHERE id_pesanan = ?";
-
+    String sql = "SELECT p.id_pesanan, p.status_pesanan, p.tanggal_pesan, p.total_harga, " +
+                 "pay.status_bayar, pay.tanggal_bayar " +
+                 "FROM pesanan p " +
+                 "LEFT JOIN pembayaran pay ON p.id_pesanan = pay.id_pesanan " +
+                 "WHERE p.id_pesanan = ?";
+    
     resetVisualTracking();
 
     try (Connection conn = koneksi.getConnection();
@@ -80,6 +84,9 @@ private void setLogo(javax.swing.JLabel label, boolean aktif, boolean besar) {
                 
                 String statusDatabase = rs.getString("status_pesanan");
                 Date tglPesan = rs.getTimestamp("tanggal_pesan");
+                
+                String statusBayar = rs.getString("status_bayar");
+                Date tglBayar = rs.getTimestamp("tanggal_bayar");
                 
                 jLabel1.setText("Status Pesanan");
                 SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy, HH:mm");
@@ -110,60 +117,61 @@ private void setLogo(javax.swing.JLabel label, boolean aktif, boolean besar) {
                 if (levelStatus >= 1 && tglPesan != null) {
                     jLabel2.setForeground(WARNA_AKTIF);
                     jLabel4.setText(sdf.format(tglPesan));
-                    isStep1Aktif = true; // Selalu aktif jika data ada
+                    isStep1Aktif = true; // ciri: selalu aktif kalau pesanan ada
                 }
 
                 // Level 2: Pembayaran berhasil
-                if (levelStatus >= 2 && tglPesan != null) {
+                if ("lunas".equalsIgnoreCase(statusBayar) && tglBayar != null) {
                     jLabel5.setForeground(WARNA_AKTIF);
-                    jLabel6.setText(sdf.format(tglPesan));
-                    isStep2Aktif = true; // Selalu aktif jika status pembayaran sukses
+                    jLabel6.setText(sdf.format(tglBayar));
+                    isStep2Aktif = true; // ciri: hanya aktif kalau status_bayar = lunas
                 }
 
                 // Level 3: Diproses
                 if (levelStatus >= 3 && tglPesan != null) {
                     jLabel7.setForeground(WARNA_AKTIF);
                     jLabel8.setText(sdf.format(tglPesan));
-                    isStep3Aktif = true;
+                    isStep3Aktif = true; // ciri: aktif kalau status pesanan = diproses
                 }
 
                 // Level 4: Sedang dicetak
                 if (levelStatus >= 4 && tglPesan != null) {
                     jLabel9.setForeground(WARNA_AKTIF);
                     jLabel10.setText(sdf.format(tglPesan));
-                    isStep4Aktif = true;
+                    isStep4Aktif = true; // ciri: aktif kalau status pesanan = sedang dicetak
                 }
 
-                // Level 5: Dikirim (ganti dari Packing)
+                // Level 5: Dikirim
                 if (levelStatus >= 5 && tglPesan != null) {
                     jLabel11.setForeground(WARNA_AKTIF);
                     jLabel12.setText(sdf.format(tglPesan));
-                    isStep5Aktif = true;
+                    isStep5Aktif = true; // ciri: aktif kalau status pesanan = dikirim
                 }
 
                 // Level 6: Selesai
                 if (levelStatus == 6 && tglPesan != null) {
                     jLabel13.setForeground(WARNA_AKTIF);
                     jLabel14.setText(sdf.format(tglPesan));
-                    isStep6Aktif = true;
+                    isStep6Aktif = true; // ciri: aktif kalau status pesanan = selesai
                 }
 
-               setLogo(jLabel15, isStep1Aktif, true);  // logo besar
-               setLogo(jLabel16, isStep2Aktif, false); // logo kecil
-               setLogo(jLabel17, isStep3Aktif, false);
-               setLogo(jLabel18, isStep4Aktif, false);
-               setLogo(jLabel20, isStep5Aktif, false);
-               setLogo(jLabel21, isStep6Aktif, false);
+                // Set logo sesuai step aktif
+                setLogo(jLabel15, isStep1Aktif, true);  // logo besar
+                setLogo(jLabel16, isStep2Aktif, false); // logo kecil
+                setLogo(jLabel17, isStep3Aktif, false);
+                setLogo(jLabel18, isStep4Aktif, false);
+                setLogo(jLabel20, isStep5Aktif, false);
+                setLogo(jLabel21, isStep6Aktif, false);
             } else {
-                    JOptionPane.showMessageDialog(this, "ID Transaksi tidak ditemukan.");
-                    logger.warning("ID Pesanan tidak ditemukan: " + idPesananAtauNoOrder);
-                }
+                JOptionPane.showMessageDialog(this, "ID Transaksi tidak ditemukan.");
+                logger.warning("ID Pesanan tidak ditemukan: " + idPesananAtauNoOrder);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Eror Sistem: " + e.getMessage());
-            logger.severe("Error sistem: " + e.getMessage());
         }
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Eror Sistem: " + e.getMessage());
+        logger.severe("Error sistem: " + e.getMessage());
+    }
     }
 
     private void resetVisualTracking() {
@@ -546,7 +554,7 @@ private void setLogo(javax.swing.JLabel label, boolean aktif, boolean besar) {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new status_pesanan(2).setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new status_pesanan().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
