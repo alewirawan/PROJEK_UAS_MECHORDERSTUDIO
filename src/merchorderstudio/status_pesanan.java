@@ -87,7 +87,8 @@ private void setLogo(javax.swing.JLabel label, boolean aktif, boolean besar) {
                 
                 int levelStatus = 0;
                 switch (statusDatabase.toLowerCase().trim()) {
-                    default: levelStatus = 0; break;                    
+                    default:                    levelStatus = 0; break;      
+                    case "pending":             levelStatus = 1; break;
                     case "pesanan berhasil":    levelStatus = 1; break;
                     case "pembayaran berhasil": levelStatus = 2; break;
                     case "diproses":            levelStatus = 3; break;
@@ -586,7 +587,7 @@ private void setLogo(javax.swing.JLabel label, boolean aktif, boolean besar) {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new status_pesanan().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new status_pesanan(6).setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
