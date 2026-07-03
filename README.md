@@ -10,7 +10,7 @@
   <img src="https://img.shields.io/badge/NetBeans-IDE-1B6AC6?style=for-the-badge&logo=apache-netbeans-ide&logoColor=white" alt="NetBeans badge" />
 </div>
 
-Aplikasi desktop untuk pemesanan merchandise, dibuat pakai Java Swing (NetBeans) dengan MySQL sebagai database.****
+Aplikasi desktop untuk pemesanan merchandise, dibuat pakai Java Swing (NetBeans) dengan MySQL sebagai database.
 
 ## Fitur
 - Registrasi & login user (data akun, no. telp, alamat)
@@ -104,7 +104,7 @@ Project ini dibuat untuk keperluan tugas kuliah.
 
 <div align="center">
   <sub>Dibuat oleh</sub>
-  <br />
+  <br><br>
   <a href="https://github.com/alewirawan"><img src="https://img.shields.io/badge/GitHub-alewirawan-181717?style=flat-square&logo=github&logoColor=white" alt="alewirawan" /></a>
   <a href="https://github.com/RajaArdika"><img src="https://img.shields.io/badge/GitHub-RajaArdika-181717?style=flat-square&logo=github&logoColor=white" alt="RajaArdika" /></a>
   <a href="https://github.com/vousvurourou"><img src="https://img.shields.io/badge/GitHub-vousvurourou-181717?style=flat-square&logo=github&logoColor=white" alt="vousvurourou" /></a>
