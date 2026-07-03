@@ -337,64 +337,81 @@ public class dashboard_admin extends javax.swing.JFrame {
     }
 
 }
-    private void DataPesanan() {
+   private void DataPesanan(){
 
-    DefaultTableModel model = new DefaultTableModel();
+    DefaultTableModel model=new DefaultTableModel();
 
     model.addColumn("ID Pesanan");
     model.addColumn("Pelanggan");
     model.addColumn("Produk");
     model.addColumn("Jumlah");
     model.addColumn("Total Harga");
-    model.addColumn("Status");
+    model.addColumn("Metode");
+    model.addColumn("Status Bayar");
+    model.addColumn("Status Pesanan");
     model.addColumn("Tanggal");
 
-    try {
+    try{
 
-        String keyword = caripesanan.getText();
+        String keyword=caripesanan.getText();
 
-        String sql =
-        "SELECT p.id_pesanan, u.nama, pr.nama_produk, dp.jumlah, " +
-        "p.total_harga, p.status_pesanan, p.tanggal_pesan " +
-        "FROM pesanan p " +
-        "INNER JOIN users u ON p.id_user = u.id_user " +
-        "INNER JOIN detail_pesanan dp ON p.id_pesanan = dp.id_pesanan " +
-        "INNER JOIN produk pr ON dp.id_produk = pr.id_produk " +
-        "WHERE p.id_pesanan LIKE ? " +
-        "OR u.nama LIKE ? " +
-        "OR pr.nama_produk LIKE ?";
+        String sql=
+        "SELECT p.id_pesanan,"
+        +"u.nama,"
+        +"pr.nama_produk,"
+        +"dp.jumlah,"
+        +"p.total_harga,"
+        +"pb.metode_bayar,"
+        +"pb.status_bayar,"
+        +"p.status_pesanan,"
+        +"p.tanggal_pesan "
+        +"FROM pesanan p "
+        +"INNER JOIN users u ON p.id_user=u.id_user "
+        +"INNER JOIN detail_pesanan dp ON p.id_pesanan=dp.id_pesanan "
+        +"INNER JOIN produk pr ON dp.id_produk=pr.id_produk "
+        +"LEFT JOIN pembayaran pb ON p.id_pesanan=pb.id_pesanan "
+        +"WHERE p.id_pesanan LIKE ? "
+        +"OR u.nama LIKE ? "
+        +"OR pr.nama_produk LIKE ? "
+        +"ORDER BY p.id_pesanan DESC";
 
-        Connection conn = koneksi.getConnection();
-        PreparedStatement pst = conn.prepareStatement(sql);
+        Connection conn=koneksi.getConnection();
 
-        pst.setString(1, "%" + keyword + "%");
-        pst.setString(2, "%" + keyword + "%");
-        pst.setString(3, "%" + keyword + "%");
+        PreparedStatement pst=conn.prepareStatement(sql);
 
-        ResultSet rs = pst.executeQuery();
+        pst.setString(1,"%"+keyword+"%");
+        pst.setString(2,"%"+keyword+"%");
+        pst.setString(3,"%"+keyword+"%");
 
-        while (rs.next()) {
+        ResultSet rs=pst.executeQuery();
 
-            double totalHarga = rs.getDouble("total_harga");
+        while(rs.next()){
 
             model.addRow(new Object[]{
+
                 rs.getInt("id_pesanan"),
                 rs.getString("nama"),
                 rs.getString("nama_produk"),
                 rs.getInt("jumlah"),
-                FormatRupiah.format(totalHarga),
+                FormatRupiah.format(rs.getDouble("total_harga")),
+                rs.getString("metode_bayar"),
+                rs.getString("status_bayar"),
                 rs.getString("status_pesanan"),
                 rs.getDate("tanggal_pesan")
+
             });
+
         }
 
         TabelPesanan.setModel(model);
-        
         TabelPesanan.setRowHeight(45);
 
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, e.getMessage());
+    }catch(Exception e){
+
+        JOptionPane.showMessageDialog(this,e.getMessage());
+
     }
+
 }
     
     public void DataProduk() {
@@ -591,46 +608,49 @@ public class dashboard_admin extends javax.swing.JFrame {
     try {
 
         String keyword = cariproduksi.getText().trim();
-
-        String status =
-        cmbStatusProduksi.getSelectedItem().toString();
+        String status = cmbStatusProduksi.getSelectedItem().toString();
 
         String sql =
-        "SELECT p.id_pesanan, u.nama, pr.nama_produk, " +
-        "dp.jumlah, dp.upload_desain, dp.catatan, " +
+        "SELECT p.id_pesanan, " +
+        "u.nama, " +
+        "pr.nama_produk, " +
+        "dp.jumlah, " +
+        "dp.upload_desain, " +
+        "dp.catatan, " +
         "p.status_pesanan " +
         "FROM pesanan p " +
         "INNER JOIN users u ON p.id_user = u.id_user " +
         "INNER JOIN detail_pesanan dp ON p.id_pesanan = dp.id_pesanan " +
         "INNER JOIN produk pr ON dp.id_produk = pr.id_produk " +
-        "INNER JOIN pembayaran pb ON p.id_pesanan = pb.id_pesanan " +
-        "WHERE pb.status_bayar='lunas' ";
+        "WHERE ";
 
-        // Filter Status
-        if(!status.equalsIgnoreCase("Semua")){
+        if (status.equalsIgnoreCase("Semua")) {
 
-            sql += "AND p.status_pesanan=? ";
+            sql += "p.status_pesanan IN ('Diproses','Produksi') ";
+
+        } else {
+
+            sql += "p.status_pesanan = ? ";
 
         }
 
         sql +=
-        "AND (CAST(p.id_pesanan AS CHAR) LIKE ? " +
+        "AND (" +
+        "CAST(p.id_pesanan AS CHAR) LIKE ? " +
         "OR u.nama LIKE ? " +
         "OR pr.nama_produk LIKE ? " +
-        "OR p.status_pesanan LIKE ?)";
+        "OR dp.catatan LIKE ?" +
+        ") " +
+        "ORDER BY p.id_pesanan DESC";
 
         Connection conn = koneksi.getConnection();
 
-        PreparedStatement pst =
-        conn.prepareStatement(sql);
+        PreparedStatement pst = conn.prepareStatement(sql);
 
         int index = 1;
 
-        if(!status.equalsIgnoreCase("Semua")){
-
-            pst.setString(index, status.toLowerCase());
-            index++;
-
+        if (!status.equalsIgnoreCase("Semua")) {
+            pst.setString(index++, status);
         }
 
         pst.setString(index++, "%" + keyword + "%");
@@ -640,23 +660,24 @@ public class dashboard_admin extends javax.swing.JFrame {
 
         ResultSet rs = pst.executeQuery();
 
-       while (rs.next()) {
+        while (rs.next()) {
 
             ImageIcon desainIcon = null;
 
-            byte[] imageBytes = rs.getBytes("upload_desain");
+            byte[] imageData = rs.getBytes("upload_desain");
 
-            if (imageBytes != null && imageBytes.length > 0) {
+            if (imageData != null) {
 
-                ImageIcon icon = new ImageIcon(imageBytes);
+                ImageIcon icon = new ImageIcon(imageData);
 
                 Image img = icon.getImage().getScaledInstance(
-                        70,
-                        70,
+                        60,
+                        60,
                         Image.SCALE_SMOOTH
                 );
 
                 desainIcon = new ImageIcon(img);
+
             }
 
             model.addRow(new Object[]{
@@ -668,24 +689,24 @@ public class dashboard_admin extends javax.swing.JFrame {
                 rs.getString("catatan"),
                 rs.getString("status_pesanan")
             });
+
         }
 
-                TabelProduksi.setModel(model);
+        TabelProduksi.setModel(model);
+        TabelProduksi.setRowHeight(70);
 
-                TabelProduksi.setRowHeight(70);
+        setupTableRenderer();
 
-                setupTableRenderer();
+        rs.close();
+        pst.close();
 
-            } catch(Exception e) {
+    } catch (Exception e) {
 
-                JOptionPane.showMessageDialog(
-                    null,
-                    e.getMessage()
-                );
+        JOptionPane.showMessageDialog(this, e.getMessage());
+        e.printStackTrace();
 
-                e.printStackTrace();
-            }
-        }
+    }
+}
     
   private void DataPelanggan() {
 
@@ -1058,6 +1079,7 @@ public class dashboard_admin extends javax.swing.JFrame {
         btnPesanan = new javax.swing.JButton();
         jPanel8 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
+        jButton11 = new javax.swing.JButton();
         jPanel16 = new javax.swing.JPanel();
         lblPending = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
@@ -1534,14 +1556,16 @@ public class dashboard_admin extends javax.swing.JFrame {
 
         TabelPesanan.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID Pesanan", "ID User", "Tanggal Pesan", "Total Harga", "Status Pesanan"
+                "ID Pesanan", "ID User", "Tanggal Pesan", "Metode Pembayaran", "Status Bayar", "Total Harga", "Status Pesanan"
             }
         ));
         TabelPesanan.setGridColor(new java.awt.Color(255, 255, 255));
@@ -1586,6 +1610,13 @@ public class dashboard_admin extends javax.swing.JFrame {
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
+        jButton11.setBackground(new java.awt.Color(102, 153, 255));
+        jButton11.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton11.setForeground(new java.awt.Color(255, 255, 255));
+        jButton11.setText("UPDATE STATUS");
+        jButton11.setPreferredSize(new java.awt.Dimension(72, 23));
+        jButton11.addActionListener(this::jButton11ActionPerformed);
+
         javax.swing.GroupLayout jPanel25Layout = new javax.swing.GroupLayout(jPanel25);
         jPanel25.setLayout(jPanel25Layout);
         jPanel25Layout.setHorizontalGroup(
@@ -1599,10 +1630,12 @@ public class dashboard_admin extends javax.swing.JFrame {
                         .addComponent(caripesanan, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnPesanan, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(283, 283, 283))
+                        .addGap(277, 277, 277))
+                    .addComponent(jScrollPane6)
                     .addGroup(jPanel25Layout.createSequentialGroup()
-                        .addComponent(jScrollPane6)
-                        .addContainerGap())))
+                        .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel25Layout.setVerticalGroup(
             jPanel25Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1614,8 +1647,10 @@ public class dashboard_admin extends javax.swing.JFrame {
                     .addComponent(caripesanan, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnPesanan, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
-                .addGap(15, 15, 15))
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         jPanel16.setBackground(new java.awt.Color(255, 255, 255));
@@ -2143,7 +2178,7 @@ public class dashboard_admin extends javax.swing.JFrame {
         cmbStatusProduksi.setBackground(new java.awt.Color(51, 102, 255));
         cmbStatusProduksi.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         cmbStatusProduksi.setForeground(new java.awt.Color(255, 255, 255));
-        cmbStatusProduksi.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Semua", "Pending", "Diproses", "Produksi", "Selesai" }));
+        cmbStatusProduksi.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Semua", "Diproses", "Produksi", "Selesai" }));
         cmbStatusProduksi.addActionListener(this::cmbStatusProduksiActionPerformed);
 
         javax.swing.GroupLayout jPanel26Layout = new javax.swing.GroupLayout(jPanel26);
@@ -3287,6 +3322,76 @@ public class dashboard_admin extends javax.swing.JFrame {
         DataProduksi();
     }//GEN-LAST:event_cmbStatusProduksiActionPerformed
 
+    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+        // TODO add your handling code here:
+
+        int baris = TabelPesanan.getSelectedRow();
+
+        if (baris == -1) {
+            JOptionPane.showMessageDialog(this, "Pilih pesanan terlebih dahulu!");
+            return;
+        }
+
+        int idPesanan = Integer.parseInt(
+                TabelPesanan.getValueAt(baris, 0).toString());
+
+        String metode = TabelPesanan.getValueAt(baris, 5).toString();
+        String statusBayar = TabelPesanan.getValueAt(baris, 6).toString();
+        String statusPesanan = TabelPesanan.getValueAt(baris, 7).toString();
+
+        if (statusPesanan.equalsIgnoreCase("Diproses")) {
+            JOptionPane.showMessageDialog(this, "Pesanan sudah diproses.");
+            return;
+        }
+
+        // Jika metode Transfer Bank atau E-Wallet,
+        // status bayar wajib Lunas
+        if ((metode.equalsIgnoreCase("Transfer Bank")
+                || metode.equalsIgnoreCase("E-Wallet"))
+                && !statusBayar.equalsIgnoreCase("Lunas")) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Pesanan tidak dapat diproses karena pembayaran belum lunas."
+            );
+            return;
+        }
+
+        // Jika COD, tidak perlu cek status pembayaran
+
+        try {
+
+            Connection conn = koneksi.getConnection();
+
+            String sql =
+                    "UPDATE pesanan SET status_pesanan=? WHERE id_pesanan=?";
+
+            PreparedStatement pst = conn.prepareStatement(sql);
+
+            pst.setString(1, "Diproses");
+            pst.setInt(2, idPesanan);
+
+            pst.executeUpdate();
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Pesanan berhasil diproses."
+            );
+
+            DataPesanan();
+
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    e.getMessage()
+            );
+        }
+
+
+
+    }//GEN-LAST:event_jButton11ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -3351,6 +3456,7 @@ public class dashboard_admin extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cmbTahun;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
+    private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
