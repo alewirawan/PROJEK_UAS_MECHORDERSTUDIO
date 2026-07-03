@@ -548,7 +548,10 @@ public class dashboard_home extends javax.swing.JFrame {
     
     private void btnNavAkunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNavAkunActionPerformed
         // TODO add your handling code here:
-        JOptionPane.showMessageDialog(this, "Halaman Akun belum dibuat");
+        profile_account frame = new profile_account();
+        
+        frame.setVisible(true);
+        
     }//GEN-LAST:event_btnNavAkunActionPerformed
 
     private void btnHamburgerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHamburgerActionPerformed

@@ -3,6 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package merchorderstudio;
+import utility.sessions;
+import utility.validasi;
+import merchorderstudio.dao.UserDAO;
+import merchorderstudio.model.User;
+import javax.swing.JOptionPane;
+import javax.swing.ImageIcon;
+import java.awt.Image;
 
 /**
  *
@@ -17,6 +24,9 @@ public class profile_account extends javax.swing.JFrame {
      */
     public profile_account() {
         initComponents();
+        setLocationRelativeTo(null);
+        pasangIkonProfile();
+        muatDataUser();
     }
 
     /**
@@ -54,10 +64,10 @@ public class profile_account extends javax.swing.JFrame {
         txtAlamat = new javax.swing.JTextField();
         txtNoTelp = new javax.swing.JTextField();
         txtEmail = new javax.swing.JTextField();
-        JPasswordField = new javax.swing.JPasswordField();
+        txtPassword = new javax.swing.JPasswordField();
         btnSimpanPerubahan = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         pnlSidebar.setBackground(new java.awt.Color(0, 15, 5));
 
@@ -143,12 +153,16 @@ public class profile_account extends javax.swing.JFrame {
         pnlSidebarLayout.setHorizontalGroup(
             pnlSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlSidebarLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnlSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnlSidebarInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblAvatarIcon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(56, Short.MAX_VALUE))
+                .addGroup(pnlSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlSidebarLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(pnlSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(pnlSidebarInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(pnlSidebarLayout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addComponent(lblAvatarIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
         pnlSidebarLayout.setVerticalGroup(
             pnlSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -173,6 +187,7 @@ public class profile_account extends javax.swing.JFrame {
         lblFormTitle.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblFormTitle.setText("Profile");
 
+        lblFormSubtitle.setForeground(new java.awt.Color(153, 153, 153));
         lblFormSubtitle.setText("Kelola informasi akun Anda");
 
         javax.swing.GroupLayout pnlFormTitleGroupLayout = new javax.swing.GroupLayout(pnlFormTitleGroup);
@@ -231,7 +246,8 @@ public class profile_account extends javax.swing.JFrame {
 
         lblPassword.setText("Password");
 
-        JPasswordField.setText("jPasswordField1");
+        txtPassword.setText("jPasswordField1");
+        txtPassword.addActionListener(this::txtPasswordActionPerformed);
 
         btnSimpanPerubahan.setText("Simpan Perubahan");
         btnSimpanPerubahan.addActionListener(this::btnSimpanPerubahanActionPerformed);
@@ -247,7 +263,7 @@ public class profile_account extends javax.swing.JFrame {
                     .addComponent(txtAlamat)
                     .addComponent(txtNoTelp)
                     .addComponent(txtEmail)
-                    .addComponent(JPasswordField)
+                    .addComponent(txtPassword)
                     .addGroup(pnlFormFieldsLayout.createSequentialGroup()
                         .addGroup(pnlFormFieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblNama)
@@ -281,7 +297,7 @@ public class profile_account extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblPassword)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(JPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnSimpanPerubahan, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
                 .addContainerGap())
@@ -330,9 +346,72 @@ public class profile_account extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+// Load ic_akun.png dari src/merchorderstudio/icons buat avatar sidebar & ikon header form
+    private void pasangIkonProfile() {
+        java.net.URL url = getClass().getResource("icons/ic_akun.png");
+        if (url == null) {
+            System.err.println("Icon ic_akun.png tidak ditemukan (pastikan ada di src/merchorderstudio/icons/)");
+            return;
+        }
+        ImageIcon asli = new ImageIcon(url);
+
+        Image kecil = asli.getImage().getScaledInstance(28, 28, Image.SCALE_SMOOTH);
+        lblFormIcon.setText("");
+        lblFormIcon.setIcon(new ImageIcon(kecil));
+
+        Image besar = asli.getImage().getScaledInstance(90, 90, Image.SCALE_SMOOTH);
+        lblAvatarIcon.setText("");
+        lblAvatarIcon.setIcon(new ImageIcon(besar));
+    }
+
+    // Ambil data akun yang lagi login langsung dari database (realtime, bukan dari sessions yang bisa basi)
+    private void muatDataUser() {
+        UserDAO userDAO = new UserDAO();
+        User u = userDAO.getUserById(sessions.idUser);
+
+        if (u == null) {
+            JOptionPane.showMessageDialog(this, "Data akun tidak ditemukan.");
+            return;
+        }
+
+        txtNama.setText(u.getNama());
+        txtAlamat.setText(u.getAlamat());
+        txtNoTelp.setText(u.getNoTelp());
+        txtEmail.setText(u.getEmail());
+        txtPassword.setText(u.getPassword());
+    }
     private void btnSimpanPerubahanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanPerubahanActionPerformed
         // TODO add your handling code here:
+        String nama = txtNama.getText().trim();
+        String alamat = txtAlamat.getText().trim();
+        String noTelp = txtNoTelp.getText().trim();
+        String email = txtEmail.getText().trim();
+        String password = new String(txtPassword.getPassword()).trim();
+
+        if (validasi.isEmpty(nama) || validasi.isEmpty(alamat) || validasi.isEmpty(noTelp)
+                || validasi.isEmpty(email) || validasi.isEmpty(password)) {
+            JOptionPane.showMessageDialog(this, "Semua field wajib diisi!");
+            return;
+        } else if (!validasi.isValidEmail(email)) {
+            JOptionPane.showMessageDialog(this, "Email Tidak Valid!");
+            return;
+        }
+
+        UserDAO userDAO = new UserDAO();
+        boolean sukses = userDAO.updateUser(sessions.idUser, nama, alamat, noTelp, email, password);
+
+        if (sukses) {
+            sessions.nama = nama;
+            sessions.email = email;
+            JOptionPane.showMessageDialog(this, "Perubahan berhasil disimpan!");
+        } else {
+            JOptionPane.showMessageDialog(this, "Gagal menyimpan perubahan, coba lagi.");
+        }
     }//GEN-LAST:event_btnSimpanPerubahanActionPerformed
+
+    private void txtPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPasswordActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPasswordActionPerformed
 
     /**
      * @param args the command line arguments
@@ -360,7 +439,6 @@ public class profile_account extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPasswordField JPasswordField;
     private javax.swing.JButton btnSimpanPerubahan;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JLabel lblAlamat;
@@ -388,5 +466,6 @@ public class profile_account extends javax.swing.JFrame {
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtNama;
     private javax.swing.JTextField txtNoTelp;
+    private javax.swing.JPasswordField txtPassword;
     // End of variables declaration//GEN-END:variables
 }
