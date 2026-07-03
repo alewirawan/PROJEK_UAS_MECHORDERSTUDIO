@@ -16,7 +16,7 @@ import java.sql.*;
  */
 public class UserDAO {
  
-    /** Ambil data satu user langsung dari database (dipakai buat isi form profile_account). */
+    // Ambil data satu user langsung dari database (dipakai buat isi form profile_account)
     public User getUserById(int idUser) {
         String sql = "SELECT id_user, nama, email, password, no_telp, alamat, role "
                 + "FROM users WHERE id_user = ?";
@@ -46,7 +46,7 @@ public class UserDAO {
         return null;
     }
  
-    /** Update data profile. Semua kolom dikirim ulang, jadi field yang tidak diubah tetap sama nilainya. */
+    // Update data profile. Semua kolom dikirim ulang, jadi field yang tidak diubah tetap sama nilainya.
     public boolean updateUser(int idUser, String nama, String alamat, String noTelp, String email, String password) {
         String sql = "UPDATE users SET nama = ?, alamat = ?, no_telp = ?, email = ?, password = ? "
                 + "WHERE id_user = ?";

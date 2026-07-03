@@ -29,10 +29,7 @@ public class dashboard_home extends javax.swing.JFrame {
     private final KeranjangDAO keranjangDAO = new KeranjangDAO();
     // ==== TAMBAHAN SELESAI ====
 
-
-    /**
-     * Creates new form dashboard_home
-     */
+    // Creates new form dashboard_home
     public dashboard_home() {
         initComponents();
         setLocationRelativeTo(null);
@@ -567,7 +564,7 @@ public class dashboard_home extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnHamburgerActionPerformed
 
-    // Query DB lalu render grid produk sesuai kategori. limit=0 artinya tanpa batas.
+    // Query DB lalu render grid produk sesuai kategori. limit=0 tanpa batas.
     private void tampilkanProduk(String kategori, int limit) {
         kategoriAktif = kategori;
         List<produk> data = produkDAO.getProduk(kategori, limit);
@@ -586,7 +583,7 @@ public class dashboard_home extends javax.swing.JFrame {
     private void loadBannerImage() {
         List<produk> data = produkDAO.getProduk("Semua", 1);
         if (data.isEmpty() || data.get(0).getFotoProduk() == null || data.get(0).getFotoProduk().length == 0) {
-            return; // biarkan fallback emoji "\uD83D\uDC55" yang di-set di initComponents
+            return; 
         }
         byte[] foto = data.get(0).getFotoProduk();
         ImageIcon asli = new ImageIcon(foto);
@@ -601,7 +598,7 @@ public class dashboard_home extends javax.swing.JFrame {
         int tinggiBaru = (int) (h * rasio);
         Image scaled = asli.getImage().getScaledInstance(lebarBaru, tinggiBaru, Image.SCALE_SMOOTH);
         lblBannerImage.setIcon(new ImageIcon(scaled));
-        lblBannerImage.setText(""); // hapus emoji fallback
+        lblBannerImage.setText(""); 
     }
     
     private ImageIcon muatIcon(String namaFile, int ukuran) {
@@ -642,11 +639,8 @@ public class dashboard_home extends javax.swing.JFrame {
     }
     
     
-    /**
-     * Bangun satu kartu produk: gambar, nama, harga, tombol keranjang.
-     * Struktur ini meniru desain ProductCardTemplate.form kamu, tapi dibuat
-     * lewat kode karena isinya harus berubah-ubah sesuai data DB.
-     */
+    
+    // Bangun satu kartu produk: gambar, nama, harga, tombol keranjang.
     private JPanel buatKartuProduk(produk p) {
         JPanel kartu = new JPanel();
         kartu.setLayout(new BorderLayout());

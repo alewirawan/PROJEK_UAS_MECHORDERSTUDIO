@@ -30,7 +30,6 @@ public class KeranjangDAO {
         String cekSql = "SELECT id_keranjang, jumlah FROM keranjang "
                 + "WHERE id_user = ? AND id_produk = ? "
                 + "AND ukuran <=> ? AND upload_desain <=> ?";
-        // <=> = null-safe equals di MySQL/MariaDB, biar ukuran/desain NULL juga match
  
         try (Connection conn = koneksi.getConnection()) {
  

@@ -77,7 +77,7 @@ public class keranjang_item {
         this.produk = produk;
     }
  
-    /** Subtotal = harga produk x jumlah */
+    // Subtotal = harga produk x jumlah
     public double getSubtotal() {
         if (produk == null) return 0;
         return produk.getHarga() * jumlah;

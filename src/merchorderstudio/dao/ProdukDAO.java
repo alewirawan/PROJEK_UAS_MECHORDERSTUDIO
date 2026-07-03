@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package merchorderstudio.dao;
-import config.koneksi; // package config, class name "koneksi" (huruf kecil, sesuai nama file)
+import config.koneksi;
 import merchorderstudio.model.produk;
  
 import java.sql.*;

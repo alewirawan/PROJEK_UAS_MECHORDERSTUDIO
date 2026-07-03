@@ -22,12 +22,12 @@ public class detail_produk extends javax.swing.JDialog {
     private int idProduk;
     private String ukuranTerpilih = "";
 
-    // --- Palet warna brand (samain sama warna orange di loginForm: FF6B00) ---
+    // --- Palet warna 
     private static final Color ORANGE = new Color(255, 107, 0);
     private static final Color ABU_SECTION = new Color(245, 245, 245);
     private static final Color ABU_BORDER = new Color(220, 220, 220);
     private static final Color HITAM = new Color(30, 30, 30);
-    // Constructor bawaan Netbeans (biarin aja buat jaga-jaga)
+    // Constructor bawaan 
     public detail_produk() {
         initComponents();
     }
@@ -40,9 +40,8 @@ public class detail_produk extends javax.swing.JDialog {
         this.idProduk = idProduk;
         loadDataProduk();
  
-        // --- TAMBAHKAN INI UNTUK MEMASTIKAN TOMBOL BACK TERHUBUNG ---
         btnBack.addActionListener(e -> {
-            this.dispose(); // Perintah untuk menutup JDialog
+            this.dispose(); // Close jDialog
         });
     }
     
@@ -174,7 +173,7 @@ public class detail_produk extends javax.swing.JDialog {
         });
     }
 
-    // Styling section-section statis biar mirip mockup (background, font judul)
+    // Styling section-section statis (background, font judul)
     private void terapkanStyling() {
         pnlDetailContent.setBackground(Color.WHITE);
         jPanel1.setBackground(Color.WHITE);
@@ -472,8 +471,7 @@ public class detail_produk extends javax.swing.JDialog {
         int jumlahPesanan = Integer.parseInt(lblJumlah.getText());
         String fileDesain = txtNamaFile.getText();
  
-        // Simpan beneran ke tabel keranjang (sebelumnya cuma nampilin dialog doang,
-        // makanya kalau balik ke dashboard jumlah keranjangnya nggak nambah)
+        // Simpan beneran ke tabel keranjang
         merchorderstudio.dao.KeranjangDAO keranjangDAO = new merchorderstudio.dao.KeranjangDAO();
         boolean sukses = keranjangDAO.tambahItem(
                 sessions.idUser,
@@ -496,9 +494,6 @@ public class detail_produk extends javax.swing.JDialog {
                      + "Desain: " + (fileDesain.isEmpty() ? "Tanpa Desain" : fileDesain);
  
         JOptionPane.showMessageDialog(this, pesan);
- 
-        // Opsional: Tutup form detail setelah berhasil nambahin ke keranjang
-        // this.dispose();
     }//GEN-LAST:event_btnTambahKeranjangActionPerformed
 
     /**

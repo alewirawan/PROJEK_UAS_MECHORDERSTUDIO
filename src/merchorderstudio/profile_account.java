@@ -364,7 +364,7 @@ public class profile_account extends javax.swing.JFrame {
         lblAvatarIcon.setIcon(new ImageIcon(besar));
     }
 
-    // Ambil data akun yang lagi login langsung dari database (realtime, bukan dari sessions yang bisa basi)
+    // Ambil data akun yang lagi login langsung dari database 
     private void muatDataUser() {
         UserDAO userDAO = new UserDAO();
         User u = userDAO.getUserById(sessions.idUser);
