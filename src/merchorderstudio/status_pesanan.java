@@ -10,7 +10,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import java.util.logging.Logger;
@@ -92,8 +91,8 @@ private void setLogo(javax.swing.JLabel label, boolean aktif, boolean besar) {
                     case "pesanan berhasil":    levelStatus = 1; break;
                     case "pembayaran berhasil": levelStatus = 2; break;
                     case "diproses":            levelStatus = 3; break;
-                    case "sedang dicetak":      levelStatus = 4; break;
-                    case "packing":             levelStatus = 5; break;
+                    case "produksi":            levelStatus = 4; break;
+                    case "dikirim":             levelStatus = 5; break;
                     case "selesai":             levelStatus = 6; break;
                 }
                 
@@ -123,72 +122,32 @@ private void setLogo(javax.swing.JLabel label, boolean aktif, boolean besar) {
 
                 // Level 3: Diproses
                 if (levelStatus >= 3 && tglPesan != null) {
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(tglPesan);
-                    cal.add(Calendar.MINUTE, 30);
-                    Date waktuEstimasi = cal.getTime();
-
-                    if (levelStatus >= 3) {
-                        jLabel7.setForeground(WARNA_AKTIF);
-                        jLabel8.setText(sdf.format(waktuEstimasi)); // tampilkan tanggal
-                        isStep3Aktif = true;
-                    } else {
-                        jLabel7.setForeground(WARNA_MATI);
-                        jLabel8.setText("-"); // kosongkan tanggal
-                    }
+                    jLabel7.setForeground(WARNA_AKTIF);
+                    jLabel8.setText(sdf.format(tglPesan));
+                    isStep3Aktif = true;
                 }
 
                 // Level 4: Sedang dicetak
                 if (levelStatus >= 4 && tglPesan != null) {
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(tglPesan);
-                    cal.add(Calendar.DAY_OF_YEAR, 1);
-                    Date waktuEstimasi = cal.getTime();
-
-                    if (waktuSekarangLaptop.after(waktuEstimasi)) {
-                        jLabel9.setForeground(WARNA_AKTIF);
-                        jLabel10.setText(sdf.format(waktuEstimasi));
-                        isStep4Aktif = true;
-                    } else {
-                        jLabel9.setForeground(WARNA_MATI);
-                        jLabel10.setText("-"); // kosongkan tanggal
-                    }
+                    jLabel9.setForeground(WARNA_AKTIF);
+                    jLabel10.setText(sdf.format(tglPesan));
+                    isStep4Aktif = true;
                 }
 
-                // Level 5: Packing
+                // Level 5: Dikirim (ganti dari Packing)
                 if (levelStatus >= 5 && tglPesan != null) {
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(tglPesan);
-                    cal.add(Calendar.DAY_OF_YEAR, 1);
-                    cal.add(Calendar.HOUR_OF_DAY, 2);
-                    Date waktuEstimasi = cal.getTime();
-
-                    if (waktuSekarangLaptop.after(waktuEstimasi)) {
-                        jLabel11.setForeground(WARNA_AKTIF);
-                        jLabel12.setText(sdf.format(waktuEstimasi));
-                        isStep5Aktif = true;
-                    } else {
-                        jLabel11.setForeground(WARNA_MATI);
-                        jLabel12.setText("-"); // kosongkan tanggal
-                    }
+                    jLabel11.setForeground(WARNA_AKTIF);
+                    jLabel12.setText(sdf.format(tglPesan));
+                    isStep5Aktif = true;
                 }
 
                 // Level 6: Selesai
-               if (levelStatus == 6 && tglPesan != null) {
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(tglPesan);
-                    cal.add(Calendar.DAY_OF_YEAR, 2);
-                    Date waktuEstimasi = cal.getTime();
+                if (levelStatus == 6 && tglPesan != null) {
+                    jLabel13.setForeground(WARNA_AKTIF);
+                    jLabel14.setText(sdf.format(tglPesan));
+                    isStep6Aktif = true;
+                }
 
-                    if (waktuSekarangLaptop.after(waktuEstimasi)) {
-                        jLabel13.setForeground(WARNA_AKTIF);
-                        jLabel14.setText(sdf.format(waktuEstimasi));
-                        isStep6Aktif = true;
-                    } else {
-                        jLabel13.setForeground(WARNA_MATI);
-                        jLabel14.setText("-"); // kosongkan tanggal
-                    }
-               }
                setLogo(jLabel15, isStep1Aktif, true);  // logo besar
                setLogo(jLabel16, isStep2Aktif, false); // logo kecil
                setLogo(jLabel17, isStep3Aktif, false);
@@ -394,7 +353,7 @@ private void setLogo(javax.swing.JLabel label, boolean aktif, boolean besar) {
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel11.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
-        jLabel11.setText("Packing");
+        jLabel11.setText("dikirim");
 
         jLabel12.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
         jLabel12.setText("-");
@@ -587,7 +546,7 @@ private void setLogo(javax.swing.JLabel label, boolean aktif, boolean besar) {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new status_pesanan(6).setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new status_pesanan(2).setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
