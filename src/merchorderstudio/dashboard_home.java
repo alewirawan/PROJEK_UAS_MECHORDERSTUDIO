@@ -203,7 +203,7 @@ public class dashboard_home extends javax.swing.JFrame {
                     .addComponent(lblBannerLine2)
                     .addComponent(btnPesanSekarang)
                     .addComponent(lblBannerLine3))
-                .addContainerGap(104, Short.MAX_VALUE))
+                .addContainerGap(103, Short.MAX_VALUE))
         );
         pnlBannerTextLayout.setVerticalGroup(
             pnlBannerTextLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -532,9 +532,11 @@ public class dashboard_home extends javax.swing.JFrame {
 
     private void btnNavPesananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNavPesananActionPerformed
         // TODO add your handling code here:
-        detail_pesanan frame = new detail_pesanan();
-        frame.setLocationRelativeTo(this);
-        frame.setVisible(true);
+        pesananSaya ps = new pesananSaya();
+        ps.setLocationRelativeTo(this);
+        ps.setVisible(true);
+
+        this.dispose();
     }//GEN-LAST:event_btnNavPesananActionPerformed
 
     private void btnNavKeranjangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNavKeranjangActionPerformed

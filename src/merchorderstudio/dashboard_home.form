@@ -284,7 +284,7 @@
                                               <Component id="btnPesanSekarang" min="-2" max="-2" attributes="0"/>
                                               <Component id="lblBannerLine3" min="-2" max="-2" attributes="0"/>
                                           </Group>
-                                          <EmptySpace pref="104" max="32767" attributes="0"/>
+                                          <EmptySpace pref="103" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                                 </DimensionLayout>

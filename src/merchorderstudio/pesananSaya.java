@@ -3,22 +3,98 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package merchorderstudio;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.text.NumberFormat;
+import java.util.Locale;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JOptionPane;
 
+import config.koneksi;
+import utility.sessions;
 /**
  *
  * @author Ratih Nawang Wulan
  */
 public class pesananSaya extends javax.swing.JFrame {
     
+    Connection conn;
+    PreparedStatement pst;
+    ResultSet rs;
+    
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(pesananSaya.class.getName());
-
-    /**
-     * Creates new form pesananSaya
-     */
+    
+    
     public pesananSaya() {
         initComponents();
-    }
 
+        setLocationRelativeTo(null);
+
+        conn = koneksi.getConnection();
+
+        jPanel2.setLayout(new BoxLayout(jPanel2, BoxLayout.Y_AXIS));
+
+        jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
+
+        tampilPesanan();
+    }
+    
+    public void tampilPesanan(){
+
+        try {
+
+            jPanel2.removeAll();
+            String sql =
+            "SELECT " +
+            "produk.nama_produk, " +
+            "produk.harga, " +
+            "produk.foto_produk, " +
+            "detail_pesanan.jumlah, " +
+            "pesanan.tanggal_pesan, " +
+            "pesanan.status_pesanan " +
+            "FROM pesanan " +
+            "INNER JOIN detail_pesanan ON pesanan.id_pesanan = detail_pesanan.id_pesanan " +
+            "INNER JOIN produk ON detail_pesanan.id_produk = produk.id_produk " +
+            "WHERE pesanan.id_user = ? " +
+            "ORDER BY pesanan.id_pesanan DESC";
+
+            pst = conn.prepareStatement(sql);
+
+            pst.setInt(1, sessions.idUser);
+
+            rs = pst.executeQuery();
+
+            while(rs.next()){
+
+                itemHistory item = new itemHistory();
+
+                item.setNama(rs.getString("nama_produk"));
+
+                item.setHarga("Rp " + rs.getInt("harga"));
+
+                item.setQty(String.valueOf(rs.getInt("jumlah")));
+
+                item.setTanggal(rs.getString("tanggal_pesan"));
+
+                item.setStatus(rs.getString("status_pesanan"));
+
+                item.setFoto(rs.getBytes("foto_produk"));
+
+                jPanel2.add(item);
+
+            }
+
+            jPanel2.revalidate();
+            jPanel2.repaint();
+
+        } catch(Exception e){
+
+            JOptionPane.showMessageDialog(this, e);
+
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -32,6 +108,7 @@ public class pesananSaya extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
+        jPanel2 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -43,6 +120,10 @@ public class pesananSaya extends javax.swing.JFrame {
 
         jButton1.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 14)); // NOI18N
         jButton1.setText("←");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
+
+        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
+        jScrollPane1.setViewportView(jPanel2);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -90,6 +171,13 @@ public class pesananSaya extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        new dashboard_home().setVisible(true);
+
+        this.dispose();
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -119,6 +207,7 @@ public class pesananSaya extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }
