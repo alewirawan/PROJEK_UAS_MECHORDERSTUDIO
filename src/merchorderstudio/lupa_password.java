@@ -4,6 +4,12 @@
  */
 package merchorderstudio;
 
+import config.koneksi;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Ratih Nawang Wulan
@@ -18,6 +24,20 @@ public class lupa_password extends javax.swing.JFrame {
     public lupa_password() {
         initComponents();
     }
+    
+    private void clearForm() {
+
+    jTextField1.setText("");
+    jPasswordField1.setText("");
+    jPasswordField2.setText("");
+
+    jCheckBox1.setSelected(false);
+
+    jPasswordField1.setEchoChar('*');
+    jPasswordField2.setEchoChar('*');
+
+    jTextField1.requestFocus();
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -40,6 +60,8 @@ public class lupa_password extends javax.swing.JFrame {
         jPasswordField2 = new javax.swing.JPasswordField();
         jTextField1 = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        jCheckBox1 = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -67,12 +89,25 @@ public class lupa_password extends javax.swing.JFrame {
 
         jButton1.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 12)); // NOI18N
         jButton1.setText("Reset Password");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         jTextField1.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 12)); // NOI18N
         jTextField1.addActionListener(this::jTextField1ActionPerformed);
 
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton2.setText("←");
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
+            }
+        });
+        jButton2.addActionListener(this::jButton2ActionPerformed);
+
+        jLabel7.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 10)); // NOI18N
+        jLabel7.setText("Masukan Email yang terdaftar untuk mengubah password. ");
+
+        jCheckBox1.setText("Tampilkan Password");
+        jCheckBox1.addActionListener(this::jCheckBox1ActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -89,12 +124,16 @@ public class lupa_password extends javax.swing.JFrame {
                                 .addComponent(jLabel3))
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jLabel4)
+                                    .addGap(289, 289, 289))
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel6)
                                     .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel5)
                                     .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel4)))))
+                                    .addComponent(jCheckBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jLabel7)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(35, 35, 35)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -117,7 +156,9 @@ public class lupa_password extends javax.swing.JFrame {
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -125,7 +166,9 @@ public class lupa_password extends javax.swing.JFrame {
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addComponent(jCheckBox1)
+                .addGap(18, 18, 18)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -158,6 +201,104 @@ public class lupa_password extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        
+    if (jCheckBox1.isSelected()) {
+        jPasswordField1.setEchoChar((char) 0);
+        jPasswordField2.setEchoChar((char) 0);
+    } else {
+        jPasswordField1.setEchoChar('\u2022'); // bullet
+        jPasswordField2.setEchoChar('\u2022');
+    }
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        String email = jTextField1.getText().trim();
+        String password = String.valueOf(jPasswordField1.getPassword());
+        String konfirmasi = String.valueOf(jPasswordField2.getPassword());
+
+        if(email.isEmpty() || password.isEmpty() || konfirmasi.isEmpty()){
+
+            JOptionPane.showMessageDialog(this,
+                "Semua data harus diisi!");
+
+            return;
+        }
+
+        if(password.length() < 8){
+
+            JOptionPane.showMessageDialog(this,
+                "Password minimal 8 karakter!");
+
+            return;
+        }
+
+        if(!password.equals(konfirmasi)){
+
+            JOptionPane.showMessageDialog(this,
+                "Konfirmasi password tidak sama!");
+
+            return;
+        }
+
+        try{
+
+            Connection conn = koneksi.getConnection();
+
+            String sql = "SELECT * FROM users WHERE email=?";
+
+            PreparedStatement pst = conn.prepareStatement(sql);
+
+            pst.setString(1, email);
+
+            ResultSet rs = pst.executeQuery();
+
+            if(rs.next()){
+
+                String update =
+                "UPDATE users SET password=? WHERE email=?";
+
+                PreparedStatement ps =
+                    conn.prepareStatement(update);
+
+                ps.setString(1,password);
+                ps.setString(2,email);
+
+                ps.executeUpdate();
+
+                JOptionPane.showMessageDialog(this,
+                    "Password berhasil diubah!");
+                clearForm();
+
+                new loginForm().setVisible(true);
+
+                this.dispose();
+
+            }else{
+
+                JOptionPane.showMessageDialog(this,
+                    "Email tidak ditemukan!"); 
+                clearForm();
+            }
+
+        }catch(Exception e){
+
+            JOptionPane.showMessageDialog(this,
+                e.getMessage());
+
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+        new loginForm().setVisible(true);
+
+        this.dispose();
+    }//GEN-LAST:event_jButton2MouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -186,12 +327,14 @@ public class lupa_password extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JPasswordField jPasswordField2;
