@@ -549,9 +549,18 @@ public class dashboard_home extends javax.swing.JFrame {
     private void btnNavAkunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNavAkunActionPerformed
         // TODO add your handling code here:
         profile_account frame = new profile_account();
-        
+
+        this.setEnabled(false); // kunci dashboard, gak bisa diklik selagi profile kebuka
+
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                dashboard_home.this.setEnabled(true); // buka kunci lagi
+                dashboard_home.this.toFront();          // fokus balik ke dashboard
+            }
+        });
+
         frame.setVisible(true);
-        
     }//GEN-LAST:event_btnNavAkunActionPerformed
 
     private void btnHamburgerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHamburgerActionPerformed
