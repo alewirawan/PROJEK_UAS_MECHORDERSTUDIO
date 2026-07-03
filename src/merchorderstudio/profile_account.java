@@ -153,16 +153,15 @@ public class profile_account extends javax.swing.JFrame {
         pnlSidebarLayout.setHorizontalGroup(
             pnlSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlSidebarLayout.createSequentialGroup()
-                .addGroup(pnlSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlSidebarLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(pnlSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(pnlSidebarInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(pnlSidebarLayout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addComponent(lblAvatarIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(pnlSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlSidebarInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(56, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSidebarLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblAvatarIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(22, 22, 22))
         );
         pnlSidebarLayout.setVerticalGroup(
             pnlSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -184,7 +183,7 @@ public class profile_account extends javax.swing.JFrame {
 
         pnlFormTitleGroup.setBackground(new java.awt.Color(255, 255, 255));
 
-        lblFormTitle.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblFormTitle.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblFormTitle.setText("Profile");
 
         lblFormSubtitle.setForeground(new java.awt.Color(153, 153, 153));
@@ -246,9 +245,12 @@ public class profile_account extends javax.swing.JFrame {
 
         lblPassword.setText("Password");
 
+        txtPassword.setForeground(new java.awt.Color(204, 204, 204));
         txtPassword.setText("jPasswordField1");
         txtPassword.addActionListener(this::txtPasswordActionPerformed);
 
+        btnSimpanPerubahan.setBackground(new java.awt.Color(255, 104, 0));
+        btnSimpanPerubahan.setForeground(new java.awt.Color(255, 255, 255));
         btnSimpanPerubahan.setText("Simpan Perubahan");
         btnSimpanPerubahan.addActionListener(this::btnSimpanPerubahanActionPerformed);
 
