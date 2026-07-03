@@ -496,13 +496,17 @@ public class checkout extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         String metodePembayaran = "";
+        String statusBayar = "";
 
         if (jRadioButton1.isSelected()) {
             metodePembayaran = "Transfer Bank";
+            statusBayar = "Lunas";
         } else if (jRadioButton2.isSelected()) {
             metodePembayaran = "E-Wallet";
+            statusBayar = "Lunas";
         } else if (jRadioButton3.isSelected()) {
             metodePembayaran = "COD";
+            statusBayar = "Pending";
         } else {
             JOptionPane.showMessageDialog(this, "Silakan pilih metode pembayaran!");
             return;
@@ -557,11 +561,7 @@ public class checkout extends javax.swing.JFrame {
             try (PreparedStatement pst = conn.prepareStatement(sqlPembayaran)) {
                 pst.setInt(1, idPesananBaru);
                 pst.setString(2, metodePembayaran);
-                if(jRadioButton1.isSelected() || jRadioButton2.isSelected()){
-                    pst.setString(3, "Lunas");
-                } else {
-                    pst.setString(3, "Pending");
-                }
+                pst.setString(3, statusBayar);
                 pst.executeUpdate();
             }
             
